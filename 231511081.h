@@ -71,7 +71,8 @@ int main() {
     getline(cin, resepObat);
     
     // Mengirim hasil pemeriksaan ke pasien oleh dokter
-    kirimHasilPemeriksaan(pasien, hasilPemeriksaan, resepObat);
+    kirimHasilPemeriksaan(pasien, hasilPemeriksaan, resepObat); 
+    //test
 
     return 0;
 }

@@ -51,8 +51,8 @@ int main() {
     UserInput input;
 
     // Mengisi data input
-    input.nik = "1234567890";
-    input.namalengkap = "John Doe";
+    input.nik = "327777777777777";
+    input.namalengkap = "Julia";
     input.tanggallahir = "01-01-1990";
     cout << "Masukkan tanggal periksa: ";
     getline(cin, input.tanggalperiksa);

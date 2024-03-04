@@ -24,11 +24,12 @@ void ambilInformasiPasien(const string& nik, UserInfo& user) {
             if (currentNik == nik) {
                 // Jika NIK pasien cocok, mengisi informasi pasien dari file
                 user.nik = currentNik;
-                user.namalengkap = line.substr(line.find(',') + 1);
-                getline(inFile, user.tanggallahir);
-                getline(inFile, user.tanggalperiksa);
-                inFile >> user.pilihandokter;
-                inFile >> user.carabayar;
+                size_t pos = line.find(',', currentNik.length() + 1);
+                user.namalengkap = line.substr(currentNik.length() + 1, pos - currentNik.length() - 1);
+                pos = line.find(',', pos + 1);
+                user.tanggallahir = line.substr(user.namalengkap.length() + currentNik.length() + 2, pos - user.namalengkap.length() - currentNik.length() - 2);
+                pos = line.find(',', pos + 1);
+                user.tanggalperiksa = line.substr(pos + 1);
                 break;
             }
         }
@@ -40,15 +41,15 @@ void ambilInformasiPasien(const string& nik, UserInfo& user) {
 
 // Fungsi untuk mengirim hasil pemeriksaan dari dokter ke pasien
 void kirimHasilPemeriksaan(const UserInfo& user, const string& hasilPemeriksaan, const string& resepObat) {
-    // Membuka file daftarperiksa.txt untuk menambahkan hasil pemeriksaan
-    ofstream outFile("daftarperiksa.txt", ios::app);
+    // Membuka file hasilperiksa.txt untuk menambahkan hasil pemeriksaan
+    ofstream outFile("hasilperiksa.txt", ios::app);
     if (outFile.is_open()) {
         // Menambahkan hasil pemeriksaan ke file
         outFile << user.nik << "," << user.tanggalperiksa << "," << hasilPemeriksaan << "," << resepObat << endl;
         outFile.close();
         cout << "Hasil pemeriksaan berhasil dikirim ke pasien." << endl;
     } else {
-        cout << "Gagal membuka file daftarperiksa.txt." << endl;
+        cout << "Gagal membuka file hasilperiksa.txt." << endl;
     }
 }
 
@@ -71,8 +72,7 @@ int main() {
     getline(cin, resepObat);
     
     // Mengirim hasil pemeriksaan ke pasien oleh dokter
-    kirimHasilPemeriksaan(pasien, hasilPemeriksaan, resepObat); 
-    //test
+    kirimHasilPemeriksaan(pasien, hasilPemeriksaan, resepObat);
 
     return 0;
 }

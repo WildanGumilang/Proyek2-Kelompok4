@@ -1,5 +1,5 @@
 #include <iostream>
-#include <fstream> //untuk memproses file
+#include <fstream>
 #include <string>
 
 using namespace std;
@@ -14,13 +14,12 @@ struct UserInput {
 };
 
 void kirimDaftarPemeriksaan(const UserInput& input) {
-    ofstream outfile("daftarperiksa.txt", ios::app); //membuka file untuk menambahkan data baru
+    ofstream outfile("daftarperiksa.txt", ios::app);
     if (!outfile) {
         cerr << "Gagal membuka file!" << endl;
         return;
     }
 
-    //menulis data pemeriksaan ke file
     outfile << "NIK: " << input.nik << endl;
     outfile << "Nama Lengkap: " << input.namalengkap << endl;
     outfile << "Tanggal Lahir: " << input.tanggallahir << endl;
@@ -29,7 +28,7 @@ void kirimDaftarPemeriksaan(const UserInput& input) {
     outfile << "Cara Bayar: " << input.carabayar << endl;
     outfile << "---------------------------------------" << endl;
 
-    outfile.close(); //menutup file
+    outfile.close();
 }
 
 void menerimaDaftarPemeriksaan() {
@@ -44,17 +43,30 @@ void menerimaDaftarPemeriksaan() {
         cout << line << endl;
     }
 
-    infile.close(); // Menutup file
+    infile.close();
+}
+
+void ambilDataAkunPengguna(UserInput& input) {
+    ifstream infile("akun_pengguna.txt");
+    if (!infile) {
+        cerr << "Gagal membuka file!" << endl;
+        return;
+    }
+
+    getline(infile, input.nik);
+    getline(infile, input.namalengkap);
+    getline(infile, input.tanggallahir);
+
+    infile.close();
 }
 
 int main() {
     UserInput input;
 
-    // Mengisi data input
-    input.nik = "1234567890";
-    input.namalengkap = "John Doe";
-    input.tanggallahir = "01-01-1990";
-    cout << "Masukkan tanggal periksa: ";
+    // Mengambil data akun pengguna dari file
+    ambilDataAkunPengguna(input);
+
+    cout << "Masukkan tanggal periksa (dd/mm/yyyy): ";
     getline(cin, input.tanggalperiksa);
     cout << "Masukkan pilihan dokter (1/2/3): ";
     cin >> input.pilihandokter;
@@ -70,5 +82,3 @@ int main() {
 
     return 0;
 }
-
- 

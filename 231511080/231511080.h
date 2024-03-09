@@ -13,6 +13,21 @@ struct UserInput {
     int carabayar;
 };
 
+void tampilkanPilihanDokter() {
+    cout << "|| ============================= Pilihan Dokter ================================= ||\n\n";
+    cout << "Pilih dokter yang Anda inginkan:\n";
+    cout << "1. Dr. Wildan Gumilang (Dokter Umum)\n";
+    cout << "2. Dr. Daffa Tridya (Spesialis Jantung)\n";
+    cout << "3. Dr. Agra Anisa (Spesialis Anak)\n";
+}
+
+void tampilkanPilihanCaraBayar() {
+    cout << "\n\n|| ============================= Pilihan Cara Bayar ============================= ||\n\n";
+    cout << "Pilih cara pembayaran:\n";
+    cout << "1. BPJS Kesehatan\n";
+    cout << "2. Pembayaran Reguler\n";
+}
+
 void kirimDaftarPemeriksaan(const UserInput& input) {
     ofstream outfile("daftarperiksa.txt", ios::app);
     if (!outfile) {
@@ -47,14 +62,21 @@ void menerimaDaftarPemeriksaan() {
 }
 
 void ambilDataAkunPengguna(UserInput& input) {
+
+    cout << "|| ================================== DAFTAR PEMERIKSAAN RUMAH SAKIT JTK ================================= ||\n\n";
+    cout << "-------------------------------------------------------------------------------------------------------------" << endl;
+    cout << "-------------------------------------------------------------------------------------------------------------" << endl;
+
+
+
     ifstream infile("akun_pengguna.txt");
     if (!infile) {
         cerr << "Gagal membuka file!" << endl;
         return;
     }
 
-    getline(infile, input.nik);
-    getline(infile, input.namalengkap);
+    getline(infile, input.nik, '|');
+    getline(infile, input.namalengkap, '|');
     getline(infile, input.tanggallahir);
 
     infile.close();
@@ -63,20 +85,24 @@ void ambilDataAkunPengguna(UserInput& input) {
 int main() {
     UserInput input;
 
-    // Mengambil data akun pengguna dari file
+
+    //mengambil data akun pengguna
     ambilDataAkunPengguna(input);
 
     cout << "Masukkan tanggal periksa (dd/mm/yyyy): ";
     getline(cin, input.tanggalperiksa);
+
+    //menampilkan dokter dan metode bayar
+    tampilkanPilihanDokter();
     cout << "Masukkan pilihan dokter (1/2/3): ";
     cin >> input.pilihandokter;
+
+    tampilkanPilihanCaraBayar();
     cout << "Masukkan cara bayar (1 untuk BPJS, 2 untuk reguler): ";
     cin >> input.carabayar;
 
-    // Kirim data pemeriksaan
     kirimDaftarPemeriksaan(input);
 
-    // Menerima dan menampilkan daftar pemeriksaan
     cout << "\nDaftar Pemeriksaan:" << endl;
     menerimaDaftarPemeriksaan();
 

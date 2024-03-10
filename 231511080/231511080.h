@@ -9,8 +9,9 @@ struct UserInput {
     string namalengkap;
     string tanggallahir;
     string tanggalperiksa;
-    int pilihandokter;
-    int carabayar;
+    string pilihandokter;
+    string carabayar;
+    string nomorbpjs;
 };
 
 void tampilkanPilihanDokter() {
@@ -18,33 +19,38 @@ void tampilkanPilihanDokter() {
     cout << "Pilih dokter yang Anda inginkan:\n";
     cout << "1. Dr. Wildan Gumilang (Dokter Umum)\n";
     cout << "2. Dr. Daffa Tridya (Spesialis Jantung)\n";
-    cout << "3. Dr. Agra Anisa (Spesialis Anak)\n";
+    cout << "3. Dr. Agra Anisa (Spesialis Anak)\n\n\n";
 }
 
 void tampilkanPilihanCaraBayar() {
     cout << "\n\n|| ============================= Pilihan Cara Bayar ============================= ||\n\n";
     cout << "Pilih cara pembayaran:\n";
     cout << "1. BPJS Kesehatan\n";
-    cout << "2. Pembayaran Reguler\n";
+    cout << "2. Pembayaran Reguler\n\n\n";
 }
 
-void kirimDaftarPemeriksaan(const UserInput& input) {
-    ofstream outfile("daftarperiksa.txt", ios::app);
-    if (!outfile) {
-        cerr << "Gagal membuka file!" << endl;
-        return;
+void ambilInformasiPasien(const string& nik, UserInput& user) {
+    ifstream inFile("akun_pengguna.txt");
+    if (inFile.is_open()) {
+        string line;
+        while (getline(inFile, line)) {
+            string currentNik = line.substr(0, line.find('|'));
+            if (currentNik == nik) {
+                // Jika NIK pasien cocok, mengisi informasi pasien dari file
+                user.nik = currentNik;
+                size_t pos = line.find('|', currentNik.length() + 1);
+                user.namalengkap = line.substr(currentNik.length() + 1, pos - currentNik.length() - 1);
+                pos = line.find('|', pos + 1);
+                user.tanggallahir = line.substr(pos + 1);
+                break;
+            }
+        }
+        inFile.close();
+    } else {
+        cout << "Gagal membuka file akun_pengguna.txt." << endl;
     }
-
-    outfile << "NIK: " << input.nik << endl;
-    outfile << "Nama Lengkap: " << input.namalengkap << endl;
-    outfile << "Tanggal Lahir: " << input.tanggallahir << endl;
-    outfile << "Tanggal Periksa: " << input.tanggalperiksa << endl;
-    outfile << "Pilihan Dokter: " << input.pilihandokter << endl;
-    outfile << "Cara Bayar: " << input.carabayar << endl;
-    outfile << "---------------------------------------" << endl;
-
-    outfile.close();
 }
+
 
 void menerimaDaftarPemeriksaan() {
     ifstream infile("daftarperiksa.txt");

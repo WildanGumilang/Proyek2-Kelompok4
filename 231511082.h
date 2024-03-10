@@ -1,120 +1,105 @@
-#include<iostream>
-#include<vector>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <unordered_map>
 
-using namespace std;
+std::unordered_map<int, char> reverse_char_map = {
+      {0, 'A'}, {1, 'B'}, {2, 'C'}, {3, 'D'}, {4, 'E'}, {5, 'F'}, {6, 'G'}, {7, 'H'}, {8, 'I'}, {9, 'J'}, {10, 'K'}, {11, 'L'}, {12, 'M'}, {13, 'N'}, {14, 'O'}, {15, 'P'}, {16, 'Q'}, {17, 'R'}, {18, 'S'}, {19, 'T'}, {20, 'U'}, {21, 'V'}, {22, 'W'}, {23, 'X'}, {24, 'Y'}, {25, 'Z'},
+    {26, 'a'}, {27, 'b'}, {28, 'c'}, {29, 'd'}, {30, 'e'}, {31, 'f'}, {32, 'g'}, {33, 'h'}, {34, 'i'}, {35, 'j'}, {36, 'k'}, {37, 'l'}, {38, 'm'}, {39, 'n'}, {40, 'o'}, {41, 'p'}, {42, 'q'}, {43, 'r'}, {44, 's'}, {45, 't'}, {46, 'u'}, {47, 'v'}, {48, 'w'}, {49, 'x'}, {50, 'y'}, {51, 'z'},
+    {52, '0'}, {53, '1'}, {54, '2'}, {55, '3'}, {56, '4'}, {57, '5'}, {58, '6'}, {59, '7'}, {60, '8'}, {61, '9'}, {62, '!'}, {63, '@'}, {64, '#'}, {65, '$'}, {66, '%'}, {67, '^'}, {68, '&'}, {69, '*'}, {70, '('}, {71, ')'}, {72, '_'}, {73, '-'}, {74, '+'}, {75, '='}, {76, '{'}, {77, '}'}, {78, '['}, {79, ']'}, {80, '<'}, {81, '>'}, {82, '.'}, {83, ','}, {84, ';'}, {85, '"'}, {86, '\''}, {87, '`'}, {88, '\\'}, {89, '/'}, {90, '?'}, {91, ':'}, {92, '~'}, {93, ' '}
+};
 
-int modInverse(int a, int m) {
-    a = a % m;
-    for (int x = 1; x < m; x++)
-        if ((a * x) % m == 1)
-            return x;
+int mod_inverse(int a, int m) {
+    a = (a % m + m) % m;
+    for (int i = 1; i < m; ++i) {
+        if ((a * i) % m == 1) {
+            return i;
+        }
+    }
+    return -1;  // Inverse does not exist
 }
 
-void getCofactor(vector<vector<int> > &a, vector<vector<int> > &temp, int p, int q, int n) {
-    int i = 0, j = 0;
-    for (int row = 0; row < n; row++) {
-        for (int col = 0; col < n; col++) {
-            if (row != p && col != q) {
-                temp[i][j++] = a[row][col];
-                if (j == n - 1) {
-                    j = 0;
-                    i++;
-                }
+std::vector<std::vector<int>> get_inverse_key(const std::vector<std::vector<int>>& key) {
+    int n = key.size();
+    std::vector<std::vector<int>> inverse_key(n, std::vector<int>(n, 0));
+
+    // Menghitung determinan matriks kunci
+    int det = key[0][0] * (key[1][1] * key[2][2] - key[1][2] * key[2][1]) -
+              key[0][1] * (key[1][0] * key[2][2] - key[1][2] * key[2][0]) +
+              key[0][2] * (key[1][0] * key[2][1] - key[1][1] * key[2][0]);
+
+    int det_inv = mod_inverse(det, 94);
+
+    // Menghitung matriks adjoint
+    inverse_key[0][0] = (key[1][1] * key[2][2] - key[1][2] * key[2][1]) * det_inv % 94;
+    inverse_key[0][1] = (key[0][2] * key[2][1] - key[0][1] * key[2][2]) * det_inv % 94;
+    inverse_key[0][2] = (key[0][1] * key[1][2] - key[0][2] * key[1][1]) * det_inv % 94;
+    inverse_key[1][0] = (key[1][2] * key[2][0] - key[1][0] * key[2][2]) * det_inv % 94;
+    inverse_key[1][1] = (key[0][0] * key[2][2] - key[0][2] * key[2][0]) * det_inv % 94;
+    inverse_key[1][2] = (key[0][2] * key[1][0] - key[0][0] * key[1][2]) * det_inv % 94;
+    inverse_key[2][0] = (key[1][0] * key[2][1] - key[1][1] * key[2][0]) * det_inv % 94;
+    inverse_key[2][1] = (key[0][1] * key[2][0] - key[0][0] * key[2][1]) * det_inv % 94;
+    inverse_key[2][2] = (key[0][0] * key[1][1] - key[0][1] * key[1][0]) * det_inv % 94;
+
+    return inverse_key;
+}
+
+std::string hill_cipher_decrypt(const std::string& text, const std::vector<std::vector<int>>& key) {
+    std::string decrypted_text = "";
+    int n = key.size();
+
+    // Periksa apakah matriks kunci dapat diinvers
+    int det = key[0][0] * (key[1][1] * key[2][2] - key[1][2] * key[2][1]) -
+              key[0][1] * (key[1][0] * key[2][2] - key[1][2] * key[2][0]) +
+              key[0][2] * (key[1][0] * key[2][1] - key[1][1] * key[2][0]);
+    if (mod_inverse(det, 94) == -1) {
+        std::cerr << "Error: Matriks kunci tidak dapat diinvers." << std::endl;
+        return "";
+    }
+
+    std::vector<std::vector<int>> inverse_key = get_inverse_key(key);
+
+    for (size_t i = 0; i < text.size(); i += n) {
+        std::string block = text.substr(i, n);
+
+        std::vector<int> result(n, 0);
+        for (int j = 0; j < n; ++j) {
+            for (int k = 0; k < n; ++k) {
+                result[j] += inverse_key[j][k] * (int)(block[k]);
             }
+            result[j] = (result[j] % 94 + 94) % 94;  // Handle nilai negatif
+        }
+
+        for (int j = 0; j < n; ++j) {
+            decrypted_text += reverse_char_map[result[j]];
         }
     }
-}
 
-int determinant(vector<vector<int> > &a, int n, int N) {
-    int D = 0;
-    if (n == 1)
-        return a[0][0];
-    vector<vector<int> > temp(N, vector<int>(N));
-    int sign = 1;
-    for (int f = 0; f < n; f++) {
-        getCofactor(a, temp, 0, f, n);
-        D += sign * a[0][f] * determinant(temp, n - 1, N);
-        sign = -sign;
-    }
-    return D;
-}
-
-void adjoint(vector<vector<int> > &a, vector<vector<int> > &adj, int N) {
-    if (N == 1) { 
-        adj[0][0] = 1;
-        return;
-    }
-    int sign = 1;
-    vector<vector<int> > temp(N, vector<int>(N));
-    for (int i = 0; i < N; i++) {
-        for (int j = 0; j < N; j++) {
-            getCofactor(a, temp, i, j, N);
-            sign = ((i + j) % 2 == 0) ? 1 : -1;
-            adj[j][i] = (sign) * (determinant(temp, N - 1, N) + 97) % 97;
-        }
-    }
-}
-
-bool inverse(vector<vector<int> > &a, vector<vector<int> > &inv, int N) {
-    int det = determinant(a, N, N);
-    if (det == 0) {
-        cout << "Inverse does not exist";
-        return false;
-    }
-    int invDet = modInverse(det, 97);
-    cout << det % 97 << ' ' << invDet << '\n';
-    vector<vector<int> > adj(N, vector<int>(N));
-    adjoint(a, adj, N);
-    for (int i = 0; i < N; i++)
-        for (int j = 0; j < N; j++)
-            inv[i][j] = (adj[i][j] * invDet) % 97;
-    return true;
+    return decrypted_text;
 }
 
 int main() {
-    int x, y, i, j, k, n;
-    cout << "Enter the size of key matrix\n";
-    cin >> n;
-    cout << "Enter the key matrix\n";
-    vector<vector<int> > a(n, vector<int>(n));
-    vector<vector<int> > adj(n, vector<int>(n));
-    vector<vector<int> > inv(n, vector<int>(n));
- 
-    for (i = 0; i < n; i++) {
-        for (j = 0; j < n; j++) {
-            cin >> a[i][j];
+    int n;
+    std::cout << "Enter the size of the key matrix encry: ";
+    std::cin >> n;
+
+    std::vector<std::vector<int>> key(n, std::vector<int>(n));
+
+    std::cout << "Enter the key matrix encry:\n";
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            std::cout << "Enter element " << i + 1 << "," << j + 1 << ": ";
+            std::cin >> key[i][j];
         }
     }
-    if (inverse(a, inv, n)) {
-        cout << "Inverse exist\n";
-    }
 
-    cout << "Enter the message to decrypt\n";
-    string s;
-    cin >> s;
-    k = 0;
-    string ans;
-    while (k < s.size()) {
-        for (i = 0; i < n; i++) {
-            int sum = 0;
-            int temp = k;
-            for (j = 0; j < n; j++) {
-                sum += ((inv[i][j] + 97) % 97 * (s[temp++] - 'a') % 97) % 97;
-                sum = sum % 97;
-            }
-            ans += (sum + 'a');
-        }
-        k += n;
-    }
+    std::string plaintext;
+    std::cin.ignore(); 
+    std::cout << "Enter the message to decrypt: ";
+    std::getline(std::cin, plaintext); 
 
-    int f = ans.size() - 1;
-    while (f >= 0 && ans[f] == 'x') {
-        f--;
-    }
+    std::string decrypted_text = hill_cipher_decrypt(plaintext, key);
+    std::cout << "Dekripsi teks: " << decrypted_text << std::endl;
 
-    for (i = 0; i <= f; i++) {
-        cout << ans[i];
-    }
-    cout << '\n';
     return 0;
 }

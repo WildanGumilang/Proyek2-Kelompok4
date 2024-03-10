@@ -15,16 +15,6 @@ std::string hill_cipher_encrypt(const std::string& text, const std::vector<std::
 
     int n = key.size();
 
-    if (n != key[0].size()) {
-        std::cerr << "Error: Key matrix must be square." << std::endl;
-        return "";
-    }
-
-    if (text.size() % n != 0) {
-        std::cerr << "Error: Plaintext length must be a multiple of the key matrix size." << std::endl;
-        return "";
-    }
-
     for (size_t i = 0; i < text.size(); i += n) {
         std::string block = text.substr(i, n);
 
@@ -58,22 +48,21 @@ void saveToFile(const std::string& filename, const std::string& original, const 
 
 int main() 
 {
-    int n;
-    std::cout << "Enter the size of the key matrix encry: ";
-    std::cin >> n;
+    // Gunakan matriks kunci statis
+    int static_key[2][2] = {
+        {2, 1}, {3, 4}
+    };
 
-    std::vector<std::vector<int>> key(n, std::vector<int>(n));
+    std::vector<std::vector<int>> key(2, std::vector<int>(2));
 
-    std::cout << "Enter the key matrix encry:\n";
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            std::cout << "Enter element " << i + 1 << "," << j + 1 << ": ";
-            std::cin >> key[i][j];
+    // Salin matriks kunci statis ke vektor
+    for (int i = 0; i < 2; ++i) {
+        for (int j = 0; j < 2; ++j) {
+            key[i][j] = static_key[i][j];
         }
     }
 
     std::string plaintext;
-    std::cin.ignore(); 
     std::cout << "Enter the message to encrypt: ";
     std::getline(std::cin, plaintext); 
 

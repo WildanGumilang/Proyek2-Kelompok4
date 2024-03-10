@@ -43,7 +43,8 @@ std::string hill_cipher_encrypt(const std::string& text, const std::vector<std::
     return encrypted_text;
 }
 
-int main() {
+// int main() 
+{
     int n;
     std::cout << "Enter the size of the key matrix encry: ";
     std::cin >> n;

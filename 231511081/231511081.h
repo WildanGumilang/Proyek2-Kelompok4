@@ -20,15 +20,15 @@ void ambilInformasiPasien(const string& nik, UserInfo& user) {
     if (inFile.is_open()) {
         string line;
         while (getline(inFile, line)) {
-            string currentNik = line.substr(0, line.find(','));
+            string currentNik = line.substr(0, line.find('|'));
             if (currentNik == nik) {
                 // Jika NIK pasien cocok, mengisi informasi pasien dari file
                 user.nik = currentNik;
-                size_t pos = line.find(',', currentNik.length() + 1);
+                size_t pos = line.find('|', currentNik.length() + 1);
                 user.namalengkap = line.substr(currentNik.length() + 1, pos - currentNik.length() - 1);
-                pos = line.find(',', pos + 1);
+                pos = line.find('|', pos + 1);
                 user.tanggallahir = line.substr(user.namalengkap.length() + currentNik.length() + 2, pos - user.namalengkap.length() - currentNik.length() - 2);
-                pos = line.find(',', pos + 1);
+                pos = line.find('|', pos + 1);
                 user.tanggalperiksa = line.substr(pos + 1);
                 break;
             }
@@ -45,7 +45,7 @@ void kirimHasilPemeriksaan(const UserInfo& user, const string& hasilPemeriksaan,
     ofstream outFile("hasilperiksa.txt", ios::app);
     if (outFile.is_open()) {
         // Menambahkan hasil pemeriksaan ke file
-        outFile << user.nik << "," << user.tanggalperiksa << "," << hasilPemeriksaan << "," << resepObat << endl;
+        outFile << user.nik << "|" << user.tanggalperiksa << "|" << hasilPemeriksaan << "|" << resepObat << endl;
         outFile.close();
         cout << "Hasil pemeriksaan berhasil dikirim ke pasien." << endl;
     } else {

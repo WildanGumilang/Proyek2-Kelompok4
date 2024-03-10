@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 #include <unordered_map>
@@ -43,7 +44,19 @@ std::string hill_cipher_encrypt(const std::string& text, const std::vector<std::
     return encrypted_text;
 }
 
-// int main() 
+void saveToFile(const std::string& filename, const std::string& content) {
+    std::ofstream file(filename);
+    if (file.is_open()) {
+        file << content;
+        std::cout << "Encrypted text has been saved to " << filename << std::endl;
+        file.close();
+    } else {
+        std::cerr << "Error: Unable to open the file." << std::endl;
+    }
+}
+
+
+int main() 
 {
     int n;
     std::cout << "Enter the size of the key matrix encry: ";
@@ -66,6 +79,10 @@ std::string hill_cipher_encrypt(const std::string& text, const std::vector<std::
 
     std::string encrypted_text = hill_cipher_encrypt(plaintext, key);
     std::cout << "Encrypted text: " << encrypted_text << std::endl;
+
+    std::string filename = "encryption_file.txt";
+    saveToFile(filename, encrypted_text);
+
 
     return 0;
 }

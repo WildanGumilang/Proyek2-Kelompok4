@@ -12,35 +12,29 @@ std::unordered_map<int, char> reverse_char_map = {
 std::string hill_cipher_encrypt(const std::string& text, const std::vector<std::vector<int>>& key) {
     std::string encrypted_text = "";
 
-    int n = key.size(); // Size of the key matrix
+    int n = key.size();
 
-    // Check if the size of the key matrix is square
     if (n != key[0].size()) {
         std::cerr << "Error: Key matrix must be square." << std::endl;
         return "";
     }
 
-    // Check if the size of the plaintext is divisible by the size of the key matrix
     if (text.size() % n != 0) {
         std::cerr << "Error: Plaintext length must be a multiple of the key matrix size." << std::endl;
         return "";
     }
 
-    // Iterate over the text in blocks of size n
     for (size_t i = 0; i < text.size(); i += n) {
-        // Extract a block of characters from the plaintext
         std::string block = text.substr(i, n);
 
-        // Multiply the key matrix with the block
         std::vector<int> result(n, 0);
         for (int j = 0; j < n; ++j) {
             for (int k = 0; k < n; ++k) {
-                result[j] += key[j][k] * (int)(block[k]); // Multiply key element with corresponding character value
+                result[j] += key[j][k] * (int)(block[k]); 
             }
-            result[j] %= 94; // Modulo operation to wrap around the character set
+            result[j] %= 94; 
         }
 
-        // Convert the result back to characters and append to the encrypted text
         for (int j = 0; j < n; ++j) {
             encrypted_text += reverse_char_map[result[j]];
         }
@@ -65,9 +59,9 @@ int main() {
     }
 
     std::string plaintext;
-    std::cin.ignore(); // Ignore the newline character after entering the key matrix size
+    std::cin.ignore(); 
     std::cout << "Enter the message to encrypt: ";
-    std::getline(std::cin, plaintext); // Read the entire line for the message to encrypt
+    std::getline(std::cin, plaintext); 
 
     std::string encrypted_text = hill_cipher_encrypt(plaintext, key);
     std::cout << "Encrypted text: " << encrypted_text << std::endl;

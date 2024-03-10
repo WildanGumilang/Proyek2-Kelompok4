@@ -44,17 +44,17 @@ std::string hill_cipher_encrypt(const std::string& text, const std::vector<std::
     return encrypted_text;
 }
 
-void saveToFile(const std::string& filename, const std::string& content) {
+void saveToFile(const std::string& filename, const std::string& original, const std::string& encrypted) {
     std::ofstream file(filename);
     if (file.is_open()) {
-        file << content;
-        std::cout << "Encrypted text has been saved to " << filename << std::endl;
+        file << "Original Text: " << original << '\n';
+        file << "Encrypted Text: " << encrypted << '\n';
+        std::cout << "Data has been saved to " << filename << std::endl;
         file.close();
     } else {
         std::cerr << "Error: Unable to open the file." << std::endl;
     }
 }
-
 
 int main() 
 {
@@ -81,8 +81,7 @@ int main()
     std::cout << "Encrypted text: " << encrypted_text << std::endl;
 
     std::string filename = "encryption_file.txt";
-    saveToFile(filename, encrypted_text);
-
+    saveToFile(filename, plaintext, encrypted_text);
 
     return 0;
 }

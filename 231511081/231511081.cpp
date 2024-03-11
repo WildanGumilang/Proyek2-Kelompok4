@@ -10,8 +10,8 @@ struct UserInfo {
     string namalengkap;
     string tanggallahir;
     string tanggalperiksa;
-    int pilihandokter;
-    int carabayar;
+    string pilihandokter;
+    string carabayar;
 };
 
 // Fungsi untuk mengambil informasi pasien dari file daftarperiksa.txt
@@ -45,7 +45,7 @@ void kirimHasilPemeriksaan(const UserInfo& user, const string& hasilPemeriksaan,
     ofstream outFile("hasilperiksa.txt", ios::app);
     if (outFile.is_open()) {
         // Menambahkan hasil pemeriksaan ke file
-        outFile << user.nik << "|" << user.tanggalperiksa << "|" << hasilPemeriksaan << "|" << resepObat << endl;
+        outFile << user.nik << "|" <<  user.namalengkap<< "|" << user.tanggallahir<< "|"<< user.tanggalperiksa << "|" << hasilPemeriksaan << "|" << resepObat << endl;
         outFile.close();
         cout << "Hasil pemeriksaan berhasil dikirim ke pasien." << endl;
     } else {

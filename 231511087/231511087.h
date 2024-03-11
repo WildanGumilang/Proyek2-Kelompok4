@@ -10,3 +10,5 @@ void gantipassword();
 void lupaPassword();
 void registrasi();
 bool login(string& nik, string& namalengkap, string& tanggallahir, string& alamat, string& password);
+bool loginAdmin(string& namaAdmin, string& password, string& nomorAdmin);
+void gantiPasswordAdmin();

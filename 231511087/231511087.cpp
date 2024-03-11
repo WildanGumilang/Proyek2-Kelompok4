@@ -15,6 +15,12 @@ struct UserData {
     string clueKeamanan;
 };
 
+struct AdminData {
+    string namaAdmin;
+    string password;
+    string nomorAdmin;
+};
+
 vector<UserData> usersData;
 
 void simpanDataPasien() {
@@ -66,8 +72,10 @@ void gantipassword() {
 
     cout << "Masukkan NIK : ";
     cin >> nik;
+    // Proses Enkripsi
     cout << "Masukkan Password Lama : ";
     cin >> password;
+    // Proses Enkripsi
 
 
     ifstream inFile("file/akun_pengguna.txt");
@@ -91,6 +99,7 @@ void gantipassword() {
                 ditemukan = true;
                 cout << "Masukkan Password Baru : ";
                 cin >> newPassword;
+                // Proses Enkripsi
                 userData.password = newPassword; 
             }
 
@@ -113,6 +122,7 @@ void gantipassword() {
             outFile.close();
             system("cls");
             cout << " ------------------------------ Password Berhasil Diganti! ----------------------------------------- \n\n";
+            usersData = updatedUsersData;
         } else {
             system("cls");
             cout << "Gagal mengganti password.\n";
@@ -132,9 +142,11 @@ void lupaPassword() {
     cout << " ------------------------------- Masukkan NIK dan Jawaban Clue Keamanan -------------------------------- \n\n";
     cout << "Masukkan NIK : ";
     cin >> nik;
+    // Proses Enkripsi
     cout << "Masukkan Jawaban Clue Keamanan : ";
     cin.ignore();
     getline(cin, jawaban);
+    // Proses Enkripsi
 
 
     ifstream inFile("file/akun_pengguna.txt");
@@ -155,6 +167,7 @@ void lupaPassword() {
             if (userData.nik == nik && jawaban == userData.clueKeamanan) {
                 cout << "Masukkan Password Baru : ";
                 cin >> userData.password;
+                // Proses Enkripsi
                 ditemukan = true;
             }
 
@@ -175,6 +188,7 @@ void lupaPassword() {
             outFile.close();
             system("cls");
             cout << " ------------------------------ Password Berhasil Diganti! ----------------------------------------- \n\n";
+            usersData = updatedUsersData;
         } else {
             system("cls");
             cout << "Gagal mengganti password.\n";
@@ -183,6 +197,8 @@ void lupaPassword() {
         system("cls");
         cout << "Gagal mengakses penyimpanan data.\n";
     }
+    
+
 }
 
 void registrasi() {
@@ -192,11 +208,13 @@ void registrasi() {
     cout << " ---------------------------------- Lengkapi Data Diri Anda ----------------------------------------- \n\n";
     cout << "NIK : ";
     cin >> userData.nik; 
+    // Proses Enkripsi
     while(userData.nik.length() != 16) {
         system("cls");
         cout << "NIK yang anda masukkan tidak valid. Silakan masukkan lagi.\n";
         cout << "NIK : ";
         cin >> userData.nik;
+        // Proses Enkripsi
     }
 
     for (const auto& user : usersData) {
@@ -210,20 +228,24 @@ void registrasi() {
     cout << "Nama Lengkap : ";
     cin.ignore();
     getline(cin, userData.namalengkap);
+    // Proses Enkripsi
     cout << "Tanggal Lahir (dd/mm/yyyy) : ";
     cin >> userData.tanggallahir;
+    // Proses Enkripsi
     cout << "Alamat Rumah : ";
     cin.ignore();
     getline(cin, userData.alamat);
+    // Proses Enkripsi
     cout << "Masukkan Password : ";
     cin >> userData.password;
+    // Proses Enkripsi
 
     cout << "Membuat Clue Keamanan\n";
     cout << "Note : Clue keamanan ini akan digunakan jika anda lupa password pada suatu saat. Isi dengan yang mudah diingat oleh anda!\n\n";
     cout << "Masukkan Clue Keamanan Anda : ";
     cin.ignore();
     getline(cin, userData.clueKeamanan);
-
+    // Proses Enkripsi
     usersData.push_back(userData);
 
     simpanDataPasien();
@@ -237,8 +259,18 @@ bool login(string& nik, string& namalengkap, string& tanggallahir, string& alama
 
     cout << "Masukkan NIK : ";
     cin >> nik;
+    // Proses Enkripsi
+    while(nik.length() != 16) {
+        system("cls");
+        cout << "NIK yang anda masukkan tidak valid. Silakan masukkan lagi.\n";
+        cout << "NIK : ";
+        cin >> nik;
+        // Proses Enkripsi
+    }
+
     cout << "Masukkan Password : ";
     cin >> password;
+    // Proses Enkripsi
 
     ifstream input("file/akun_pengguna.txt");
     if (input.is_open()) {
@@ -259,6 +291,7 @@ bool login(string& nik, string& namalengkap, string& tanggallahir, string& alama
                 namalengkap = userData.namalengkap;
                 tanggallahir = userData.tanggallahir;
                 alamat = userData.alamat;
+                // Proses Dekripsi
                 break;
             }
         }
@@ -281,3 +314,125 @@ bool login(string& nik, string& namalengkap, string& tanggallahir, string& alama
 }
 
 
+//Fungsi Login Admin
+
+bool loginAdmin(string& namaAdmin, string& password, string& nomorAdmin) {
+    bool cek = false;
+
+    cout << " ======================================= Halaman Login Admin ======================================== \n";
+    cout << " ----------------------------------- Masukkan Nomor Admin dan Password -------------------------------- \n\n";
+
+    cout << "Masukkan Nomor Admin : ";
+    cin >> nomorAdmin;
+    // Proses Enkripsi
+    while(nomorAdmin.length() != 6) {
+        system("cls");
+        cout << "NIK yang anda masukkan tidak valid. Silakan masukkan lagi.\n";
+        cout << "Nomor Admin : ";
+        cin >> nomorAdmin;
+        // Proses Enkripsi
+    }
+    
+    cout << "Masukkan Password : ";
+    cin >> password;
+    // Proses Enkripsi
+
+    ifstream input("file/akun_admin.txt");
+    if (input.is_open()) {
+        string line;
+        while (getline(input, line)) {
+            stringstream ss(line);
+            AdminData adminData;
+
+            getline(ss, adminData.nomorAdmin, '|');
+            getline(ss, adminData.namaAdmin, '|');
+            getline(ss, adminData.password, '|');
+
+            if (nomorAdmin == adminData.nomorAdmin && password == adminData.password) {
+                cek = true;
+                namaAdmin = adminData.namaAdmin;
+                // Proses Dekripsi
+                break;
+            }
+        }
+        input.close();
+
+        if (cek) {
+            system("cls");
+            cout << "|| ----------------------------------------- Login Berhasil! --------------------------------------- ||\n\n";
+            return true;
+        } else {
+            system("cls");
+            cout << "Login Admin gagal, cek kembali Nomor Admin dan password Anda.\n\n";
+            return false;
+        }
+    } else {
+        system("cls");
+        cout << "Gagal mengakses penyimpanan data.\n";
+        return false;
+    }
+}
+
+void gantiPasswordAdmin() {
+    string nomorAdmin, password, newPassword;
+    bool ditemukan = false;
+
+    cout << " =================================== Halaman Ganti Password Admin ======================================== \n";
+    cout << " ------------------------------- Masukkan Nomor Admin dan Password Baru ------------------------------------ \n\n";
+
+    cout << "Masukkan Nomor Admin : ";
+    cin >> nomorAdmin;
+    // Proses Enkripsi
+    cout << "Masukkan Password Lama : ";
+    cin >> password;
+    // Proses Enkripsi
+
+
+    ifstream inFile("file/akun_admin.txt");
+    if (inFile.is_open()) {
+        vector<AdminData> updatedAdminData;
+        string line;
+        while (getline(inFile, line)) {
+            stringstream ss(line);
+            AdminData adminData;
+
+            getline(ss, adminData.nomorAdmin, '|');
+            getline(ss, adminData.namaAdmin, '|');
+            getline(ss, adminData.password, '|');
+
+            if (adminData.nomorAdmin == nomorAdmin && password == adminData.password) {
+                ditemukan = true;
+                cout << "Masukkan Password Baru : ";
+                cin >> newPassword;
+                // Proses Enkripsi
+                adminData.password = newPassword; 
+            }
+
+            updatedAdminData.push_back(adminData);
+        }
+        inFile.close();
+
+        if (!ditemukan) {
+            system("cls");
+            cout << "Password tidak berhasil diganti. Pastikan Nomor Admin dan password lama Anda benar!\n\n";
+            return;
+        }
+
+        ofstream outFile("file/akun_admin.txt");
+        if (outFile.is_open()) {
+            for (const auto& adminData : updatedAdminData) {
+                outFile << adminData.nomorAdmin << "|" << adminData.namaAdmin << "|" << adminData.password << endl;
+            }
+            outFile.close();
+            system("cls");
+            cout << " ------------------------------ Password Admin Berhasil Diganti! ----------------------------------------- \n\n";
+        } else {
+            system("cls");
+            cout << "Gagal mengganti password admin.\n";
+        }
+
+    } else {
+        system("cls");
+        cout << "Gagal mengakses penyimpanan data admin.\n";
+    }
+}

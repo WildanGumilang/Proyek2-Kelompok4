@@ -42,8 +42,7 @@ void hill_cipher_encrypt(const char* text, const int key[2][2], char* encrypted_
 void saveToFile(const char* filename, const char* original, const char* encrypted) { // ini adalah fungsi yang berisi tiga parameter yaitu, filename, original, dan terenkripsi
     ofstream file(filename); // ini untuk menulis ke file dengan nama yang diberikan (filename)
     if (file.is_open()) { // membuka file
-        file << "Plaintext: " << original << '\n'; // ini untuk menulis teks asli ke dalam file dengan menambahkan kata Plaintext:
-        file << "Encrypted Text: " << encrypted << '\n'; // ini untuk menulis terenkripdi ke dalam file dengan menambahkan kata Encrypted Text:
+        file << original << "|" << encrypted << '\n'; // ini untuk menuliskan plaintext dan hasil terenkripsi ke dalam file 
         cout << "Data has been saved to " << filename << endl; // untuk menampilkan pada layar bahwa data tersimpan
         file.close(); // menutup file
     } else {

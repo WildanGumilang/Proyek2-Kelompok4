@@ -1,86 +1,66 @@
 #include <iostream>
 #include <fstream>
-#include <string>
-#include <vector>
-#include <unordered_map>
 
-std::unordered_map<int, char> reverse_char_map = {
-    {0, 'A'}, {1, 'B'}, {2, 'C'}, {3, 'D'}, {4, 'E'}, {5, 'F'}, {6, 'G'}, {7, 'H'}, {8, 'I'}, {9, 'J'}, {10, 'K'}, {11, 'L'}, {12, 'M'}, {13, 'N'}, {14, 'O'}, {15, 'P'}, {16, 'Q'}, {17, 'R'}, {18, 'S'}, {19, 'T'}, {20, 'U'}, {21, 'V'}, {22, 'W'}, {23, 'X'}, {24, 'Y'}, {25, 'Z'},
-    {26, 'a'}, {27, 'b'}, {28, 'c'}, {29, 'd'}, {30, 'e'}, {31, 'f'}, {32, 'g'}, {33, 'h'}, {34, 'i'}, {35, 'j'}, {36, 'k'}, {37, 'l'}, {38, 'm'}, {39, 'n'}, {40, 'o'}, {41, 'p'}, {42, 'q'}, {43, 'r'}, {44, 's'}, {45, 't'}, {46, 'u'}, {47, 'v'}, {48, 'w'}, {49, 'x'}, {50, 'y'}, {51, 'z'},
-    {52, '0'}, {53, '1'}, {54, '2'}, {55, '3'}, {56, '4'}, {57, '5'}, {58, '6'}, {59, '7'}, {60, '8'}, {61, '9'}, {62, '!'}, {63, '@'}, {64, '#'}, {65, '$'}, {66, '%'}, {67, '^'}, {68, '&'}, {69, '*'}, {70, '('}, {71, ')'}, {72, '_'}, {73, '-'}, {74, '+'}, {75, '='}, {76, '{'}, {77, '}'}, {78, '['}, {79, ']'}, {80, '<'}, {81, '>'}, {82, '.'}, {83, ','}, {84, ';'}, {85, '"'}, {86, '\''}, {87, '`'}, {88, '\\'}, {89, '/'}, {90, '?'}, {91, ':'}, {92, '~'}, {93, ' '}
+using namespace std;
+
+// Array untuk mengonversi indeks ke karakter
+char mod[94] = {
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '-', '+', '=', '{', '}', 
+    '[', ']', '<', '>', '.', ',', ';', '"', '\'', '`', '\\', '/', '?', ':', '~', ' '
 };
 
-std::string hill_cipher_encrypt(const std::string& text, const std::vector<std::vector<int>>& key) {
-    std::string encrypted_text = "";
+// Fungsi untuk melakukan dekripsi Hill Cipher
+void hill_cipher_decrypt(const char* encrypted_text, const int key[2][2], char* decrypted_text) {
+    int n = 2; // Ukuran matriks kunci
 
-    int n = key.size();
+    size_t len = 0;
+    while (encrypted_text[len] != '\0') {
+        len++;
+    }
 
-    for (size_t i = 0; i < text.size(); i += n) {
-        std::string block = text.substr(i, n);
+    int mod_inverse[94];
 
-        std::vector<int> result(n, 0);
-        for (int j = 0; j < n; ++j) {
-            for (int k = 0; k < n; ++k) {
-                result[j] += key[j][k] * (int)(block[k]);
+    for (int i = 0; i < 94; i++) {
+        mod_inverse[i] = -1;
+        for (int j = 0; j < 94; j++) {
+            if ((i * j) % 94 == 1) {
+                mod_inverse[i] = j;
+                break;
             }
-            result[j] %= 94;
-        }
-
-        for (int j = 0; j < n; ++j) {
-            encrypted_text += reverse_char_map[result[j]];
         }
     }
 
-    return encrypted_text;
+    for (size_t i = 0; i < len; i += n) {
+        const char* block = encrypted_text + i;
+
+        int result[2] = {0};
+
+        for (int j = 0; j < n; j = j + 1) {
+            for (int k = 0; k < n; ++k) {
+                result[j] += mod_inverse[key[j][k]] * static_cast<int>(block[k]); 
+            }
+            result[j] %= 94; 
+        }
+
+        for (int j = 0; j < n; j = j + 1) {
+            decrypted_text[i + j] = mod[result[j]];
+        }
+    }
+    decrypted_text[len] = '\0'; // Menambahkan null terminator pada string hasil dekripsi
 }
 
-std::string hill_cipher_decrypt(const std::string& text, const std::vector<std::vector<int>>& key) {
-    std::string decrypted_text = "";
-
-    int n = key.size();
-    int mod_inverse = 0;
-
-    // Temukan modulus inverse dari determinan matriks kunci
-    for (int i = 0; i < 94; ++i) {
-        if ((key[0][0] * key[1][1] - key[0][1] * key[1][0]) * i % 94 == 1) {
-            mod_inverse = i;
-            break;
-        }
-    }
-
-    for (size_t i = 0; i < text.size(); i += n) {
-        std::string block = text.substr(i, n);
-
-        std::vector<int> result(n, 0);
-        for (int j = 0; j < n; ++j) {
-            for (int k = 0; k < n; ++k) {
-                result[j] += key[j][k] * ((int)(block[k]) - 32);
-            }
-            result[j] *= mod_inverse;
-            result[j] %= 94;
-
-            if (result[j] < 0) {
-                result[j] += 94;
-            }
-        }
-
-        for (int j = 0; j < n; ++j) {
-            decrypted_text += reverse_char_map[result[j]];
-        }
-    }
-
-    return decrypted_text;
-}
-
-void saveToFile(const std::string& filename, const std::string& original, const std::string& encrypted) {
-    std::ofstream file(filename);
+// Fungsi untuk menyimpan hasil dekripsi ke file
+void saveToFile(const char* encryption_file.txt, const char* original, const char* decrypted) {
+    ofstream file(encryption_file.txt);
     if (file.is_open()) {
-        file << "Original Text: " << original << '\n';
-        file << "Encrypted Text: " << encrypted << '\n';
-        std::cout << "Data has been saved to " << filename << std::endl;
+        file << "Encrypted Text: " << original << '\n';
+        file << "Decrypted Text: " << decrypted << '\n';
+        cout << "Data has been saved to " << encryption_file.txt << std::endl;
         file.close();
     } else {
-        std::cerr << "Error: Unable to open the file." << std::endl;
+        cerr << "Error: Unable to open the file." << std::endl;
     }
 }
 
@@ -90,27 +70,17 @@ int main() {
         {2, 1}, {3, 4}
     };
 
-    std::vector<std::vector<int>> key(2, std::vector<int>(2));
+    const int max_text_length = 1000; // Tentukan panjang maksimum string
+    char encrypted_text[max_text_length];
 
-    // Salin matriks kunci statis ke vektor
-    for (int i = 0; i < 2; ++i) {
-        for (int j = 0; j < 2; ++j) {
-            key[i][j] = static_key[i][j];
-        }
-    }
+    cout << "Enter the encrypted message to decrypt: ";
+    cin.getline(encrypted_text, max_text_length);
 
-    std::string plaintext;
-    std::cout << "Enter the message to encrypt: ";
-    std::getline(std::cin, plaintext);
+    char decrypted_text[max_text_length];
+    hill_cipher_decrypt(encrypted_text, static_key, decrypted_text);
 
-    std::string encrypted_text = hill_cipher_encrypt(plaintext, key);
-    std::cout << "Encrypted text: " << encrypted_text << std::endl;
-
-    std::string filename = "encryption_file.txt";
-    saveToFile(filename, plaintext, encrypted_text);
-
-    std::string decrypted_text = hill_cipher_decrypt(encrypted_text, key);
-    std::cout << "Decrypted text: " << decrypted_text << std::endl;
+    const char* filename = "decryption_file.txt";
+    saveToFile(filename, encrypted_text, decrypted_text);
 
     return 0;
 }

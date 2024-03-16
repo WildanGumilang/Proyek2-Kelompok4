@@ -64,10 +64,10 @@ int main() {
     char encrypted_text[max_text_length]; // ini adalah array untuk menyimpan teks terenkripsi
     hill_cipher_encrypt(plaintext, static_key, encrypted_text); // untuk melakukan enkripsi menggunakan kunci statis
 
-    // cout << "Encrypted text: " << encrypted_text << endl;
+   
 
-    const char* filename = "encryption_file.txt"; // untuk menyimpan kedalam file bernama encryption_file.txt
-    saveToFile(filename, plaintext, encrypted_text); // data yang disimpan meliputi plaintext dan encrypted text 
+    const char* filename = "encryption_file.txt"; 
+    saveToFile(filename, plaintext, encrypted_text); 
 
     return 0;
 }

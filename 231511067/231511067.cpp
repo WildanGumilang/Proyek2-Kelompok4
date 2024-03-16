@@ -1,8 +1,19 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sstream>
 
 using namespace std;
+
+// Deklarasi struktur UserData
+struct UserData {
+    string nik;
+    string password;
+    string namalengkap;
+    string tanggallahir;
+    string alamat;
+    string clueKeamanan;
+};
 
 // ini array untuk mengonversi indeks ke karakter
 char mod[94] = {
@@ -70,4 +81,41 @@ int main() {
     saveToFile(filename, plaintext, encrypted_text); 
 
     return 0;
+}
+
+void tampilkanDataPasienByNIK(const string& nik) {
+    ifstream inFile("file/akun_pengguna.txt");
+    if (inFile.is_open()) {
+        string line;
+        bool found = false;
+        while (getline(inFile, line)) {
+            stringstream ss(line);
+            UserData userData;
+
+            getline(ss, userData.nik, '|');
+            getline(ss, userData.password, '|');
+            getline(ss, userData.namalengkap, '|');
+            getline(ss, userData.tanggallahir, '|');
+            getline(ss, userData.alamat, '|');
+            getline(ss, userData.clueKeamanan);
+
+            if (userData.nik == nik) {
+                cout << "NIK: " << userData.nik << endl;
+                cout << "Password: " << userData.password << endl;
+                cout << "Nama Lengkap: " << userData.namalengkap << endl;
+                cout << "Tanggal Lahir: " << userData.tanggallahir << endl;
+                cout << "Alamat: " << userData.alamat << endl;
+                cout << "Clue Keamanan: " << userData.clueKeamanan << endl;
+                found = true;
+                break; // Keluar dari loop setelah menemukan data yang dicari
+            }
+        }
+        inFile.close();
+        
+        if (!found) {
+            cout << "Data pasien dengan NIK " << nik << " tidak ditemukan." << endl;
+        }
+    } else {
+        cout << "Gagal mengakses penyimpanan data.\n";
+    }
 }

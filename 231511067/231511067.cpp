@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <cstring>
 
 using namespace std;
 
@@ -15,6 +16,9 @@ struct UserData {
     string clueKeamanan;
 };
 
+// Deklarasi prototipe fungsi
+void tampilkanDataPasienByNIK(const string& nik);
+
 // ini array untuk mengonversi indeks ke karakter
 char mod[94] = {
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
@@ -23,47 +27,59 @@ char mod[94] = {
     '[', ']', '<', '>', '.', ',', ';', '"', '\'', '`', '\\', '/', '?', ':', '~', ' '
 };
 
-// ini adalah ungsi untuk melakukan enkripsi Hill Cipher
-void hill_cipher_encrypt(const char* text, const int key[2][2], char* encrypted_text) {
-    int n = 2; // ini untuk menentukan ukuran matriks kunci
-    size_t len = 0; // ini untuk menghitung panjang teks yang akan di enkripsi
-    while (text[len] != '\0') { // ini adalah looping while jika character sama dengan null atau (\0) maka looping keluar
-        len = len +1 ;
-    }
-
-    for (size_t i = 0; i < len; i += n) { // ini adalah looping for untuk menentukan panjang matriks kunci dengan dengan len sebagai batas
-        const char* block = text + i; // variabel block ini untuk menyimpan blok text sepanjang n
-
-        int result[2] = {0}; // ini untuk menyimpan hasil enkripsi
-
-        for (int j = 0; j < n; j = j + 1) { // ini adalah looping for baris matriks kunci
-            for (int k = 0; k < n; ++k) { // ini adalah looping for hasil enkripsi yang dihitung dengan mengalikan elemen matriks kunci (key[j][k]) dengan elemen blok teks (block[k])
-                result[j] += key[j][k] * static_cast<int>(block[k]); 
-            }
-            result[j] %= 94; // ini adalah hasil enkripsi
-        }
-
-        for (int j = 0; j < n; j = j + 1) { // ini adalah looping for baris matriks kunci
-            encrypted_text[i + j] = mod[result[j]]; // karakter hasil enkripsi diambil dari array mod lalu disimpan di dalam encrypted_text
+int mod_inverse(int a, int m) {
+    a = a % m;
+    for (int x = 1; x < m; x++) {
+        if ((a * x) % m == 1) {
+            return x;
         }
     }
-    encrypted_text[len] = '\0'; // ini untuk untuk menandakan akhir dari string hasil enkripsi
+    return -1; // Modular inverse does not exist
 }
 
-void saveToFile(const char* filename, const char* original, const char* encrypted) { // ini adalah fungsi yang berisi tiga parameter yaitu, filename, original, dan terenkripsi
-    ofstream file(filename); // ini untuk menulis ke file dengan nama yang diberikan (filename)
-    if (file.is_open()) { // membuka file
-        file << original << "|" << encrypted << '\n'; // ini untuk menuliskan plaintext dan hasil terenkripsi ke dalam file 
-        cout << "Data has been saved to " << filename << endl; // untuk menampilkan pada layar bahwa data tersimpan
-        file.close(); // menutup file
-    } else {
-        cerr << "Error: Unable to open the file." << endl; // untuk menampilkan pada layar bahwa file tidak dapat terbuka
+void hill_cipher_encrypt(const char* plaintext, const int key[2][2], char* encrypted_text) {
+    int len = strlen(plaintext);
+
+    if (len % 2 != 0) {
+        len++;
     }
+
+    char padded_plaintext[len + 1];
+    strcpy(padded_plaintext, plaintext);
+    if (len > strlen(plaintext)) {
+        padded_plaintext[len - 1] = 'X';
+        padded_plaintext[len] = '\0';
+    }
+
+    for (int i = 0; i < len; i += 2) {
+        int x1 = -1, x2 = -1;
+        for (int j = 0; j < 94; ++j) {
+            if (mod[j] == padded_plaintext[i]) {
+                x1 = j;
+            }
+            if (mod[j] == padded_plaintext[i + 1]) {
+                x2 = j;
+            }
+        }
+
+        if (x1 == -1 || x2 == -1) {
+            cerr << "Invalid character in plaintext." << endl;
+            return;
+        }
+
+        int y1 = (key[0][0] * x1 + key[0][1] * x2) % 94;
+        int y2 = (key[1][0] * x1 + key[1][1] * x2) % 94;
+
+        encrypted_text[i] = mod[y1];
+        encrypted_text[i + 1] = mod[y2];
+    }
+    encrypted_text[len] = '\0';
 }
 
 int main() {
     int static_key[2][2] = { // ini adalah matriks statis 2x2
-        {2, 1}, {3, 4} // ini adalah kunci matriks 
+        {31, 59},
+        {17, 92} // ini adalah kunci matriks 
     };
 
     const int max_text_length = 1000; // ini untuk menentukan maksimal panjang string
@@ -75,10 +91,7 @@ int main() {
     char encrypted_text[max_text_length]; // ini adalah array untuk menyimpan teks terenkripsi
     hill_cipher_encrypt(plaintext, static_key, encrypted_text); // untuk melakukan enkripsi menggunakan kunci statis
 
-    // cout << "Encrypted text: " << encrypted_text << endl;
-
-    const char* filename = "encryption_file.txt"; // untuk menyimpan kedalam file bernama encryption_file.txt
-    saveToFile(filename, plaintext, encrypted_text); // data yang disimpan meliputi plaintext dan encrypted text 
+    cout << "Encrypted text: " << encrypted_text << endl;
 
     return 0;
 }

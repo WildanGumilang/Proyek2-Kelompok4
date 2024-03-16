@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Proyek2/proyek2/Proyek2-Kelompok4",
-      "program": "c:/Proyek2/proyek2/Proyek2-Kelompok4/build/Debug/outDebug",
+      "cwd": "d:/Proyek2/PROYEK2/Proyek2-Kelompok4",
+      "program": "d:/Proyek2/PROYEK2/Proyek2-Kelompok4/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

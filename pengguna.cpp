@@ -1,5 +1,8 @@
 #include "231511087/231511087.h"
-
+#include "231511067/231511067.h"
+#include "231511080/231511080.h"
+#include "231511081/231511081.h"
+#include "231511082/231511082.h"
 using namespace std;
 
 int main() {
@@ -8,8 +11,6 @@ int main() {
     bool loginBerhasil = false;
 
     //HALAMAN AWAL
-
-    bacaDataPasien();
 
     while (true) {
         if (!loginBerhasil) {     
@@ -22,7 +23,7 @@ int main() {
             cout << "||                                                                                                     ||\n";
             cout << "||     1. Registrasi                                                                                   ||\n";
             cout << "||     2. Login                                                                                        ||\n";
-            cout << "||     3. Lupa Password Akun                                                                           ||\n";
+            cout << "||     3. Lupa Password                                                                                ||\n";
             cout << "||     4. KELUAR                                                                                       ||\n";
             cout << "||                                                                                                     ||\n";
             cout << "|| =================================================================================================== ||\n\n";
@@ -44,15 +45,15 @@ int main() {
                     loginBerhasil = login(nik, namalengkap, tanggallahir, alamat, password);
                     break;
                 case 3:
+                    // HALAMAN LOGIN
                     system("cls");
-                    // HALAMAN LUPAPASSWORD
                     lupaPassword();
                     break;
                 case 4:
-                    // KELUAR
                     system("cls");
                     cout << "\t\t\t TerimaKasih Telah Memakai Aplikasi Ini! \n\n";
                     return 0;
+                    break;
                 default:
                     system("cls");
                     cout << "Mohon pilih salah satu pilihan diatas!\n\n";
@@ -66,9 +67,9 @@ int main() {
             cout << "                                                                                                         \n";
             cout << "|| ============================================ MENU ================================================= ||\n";
             cout << "||                                                                                                     ||\n";
-            cout << "||     1. Mendaftar Untuk Pemeriksaan                                                                  ||\n";
-            cout << "||     2. Melihat Riwayat Hasil Pemeriksaan                                                            ||\n";
-            cout << "||     3. Ganti Password Akun                                                                          ||\n";
+            cout << "||     1. Melihat Data Pribadi Anda                                                                    ||\n";            
+            cout << "||     2. Mendaftar Untuk Pemeriksaan                                                                  ||\n";
+            cout << "||     3. Melihat Riwayat Hasil Pemeriksaan                                                            ||\n";
             cout << "||     4. KELUAR                                                                                       ||\n";
             cout << "||                                                                                                     ||\n";
             cout << "|| =================================================================================================== ||\n\n";
@@ -77,18 +78,18 @@ int main() {
             switch (pilihan) {
                 case 1:
                     system("cls");
-                    // HALAMAN PENDAFTARAN
-                    // mendaftarPemeriksaan();
+                    // HALAMAN DATAPASIEN
+                    tampilkanDataPasienByNIK(nik);
                     break;
                 case 2:
                     system("cls");
                     // HALAMAN PENDAFTARAN
-                    // melihatRiwayatPemeriksaan();
+                    pendaftaranPeriksa(nik, namalengkap, tanggallahir);
                     break;
                 case 3:
                     system("cls");
-                    //HALAMAN GANTI PASSWORD
-                    gantipassword();
+                    // HALAMAN HASIL PERIKSA
+                    tampilkanSuratHasilPemeriksaan(nik);
                     break;
                 case 4:
                     // KELUAR

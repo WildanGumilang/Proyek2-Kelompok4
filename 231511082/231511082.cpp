@@ -90,6 +90,13 @@ void hill_cipher_decrypt(const char* encrypted_text, const int key[2][2], char* 
 }
 
 void tampilkanSeluruhDataPasien() {
+    int key[2][2] = {
+        {31, 59},
+        {17, 92}
+    };
+    char decrypted_text[100];
+    char encrypted_text[100];
+
     ifstream inFile("file/akun_pengguna.txt");
     if (inFile.is_open()) {
         string line;
@@ -105,6 +112,17 @@ void tampilkanSeluruhDataPasien() {
             getline(ss, user.tanggallahir, '|');
             getline(ss, user.alamat, '|');
             getline(ss, user.clueKeamanan);
+
+            hill_cipher_decrypt(user.nik.c_str(), key, decrypted_text);
+            user.nik = decrypted_text;
+            hill_cipher_decrypt(user.password.c_str(), key, decrypted_text);
+            user.password = decrypted_text;
+            hill_cipher_decrypt(user.namalengkap.c_str(), key, decrypted_text);
+            user.namalengkap = decrypted_text;
+            hill_cipher_decrypt(user.tanggallahir.c_str(), key, decrypted_text);
+            user.tanggallahir = decrypted_text;
+            hill_cipher_decrypt(user.alamat.c_str(), key, decrypted_text);
+            user.alamat = decrypted_text;
 
             // Tambahkan data pengguna ke vektor userData
             userData.push_back(user);
@@ -125,21 +143,4 @@ void tampilkanSeluruhDataPasien() {
     } else {
         cout << "Gagal mengakses penyimpanan data.\n";
     }
-} 
-
-int main() {
-    const int key[2][2] = {
-        {31, 59},
-        {17, 92}
-    };
-    char decrypted_text[100];
-    char encrypted_text[100];
-
-    cout << "Masukkan teks yang ingin didekripsi: ";
-    cin.getline(encrypted_text, 100);
-
-    hill_cipher_decrypt(encrypted_text, key, decrypted_text);
-    cout << "Teks terdekripsi: " << decrypted_text << endl;
-
-    return 0;
 }

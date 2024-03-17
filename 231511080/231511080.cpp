@@ -1,3 +1,6 @@
+#include "231511080.h"
+#include "../231511067/231511067.h"
+#include "../231511082/231511082.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -31,12 +34,26 @@ string generateNomorPendaftaran() {
 // Fungsi untuk mengisi pendaftaran pemeriksaan
 void pendaftaranPeriksa(const string& nik, const string& namalengkap, const string& tanggallahir) {
     userDaftar pendaftaran;
+    int key[2][2] = {
+        {31, 59},
+        {17, 92}
+    };
+    char decrypted_text[100];
+    char encrypted_text[100];
 
     // Isi data pendaftaran
     pendaftaran.nomorPendaftaran = generateNomorPendaftaran();
+    hill_cipher_encrypt(pendaftaran.nomorPendaftaran.c_str(), key, encrypted_text);
+    pendaftaran.nomorPendaftaran = encrypted_text;
     pendaftaran.nik = nik;
+    hill_cipher_encrypt(pendaftaran.nik.c_str(), key, encrypted_text);
+    pendaftaran.nik = encrypted_text;
     pendaftaran.namalengkap = namalengkap;
+    hill_cipher_encrypt(pendaftaran.namalengkap.c_str(), key, encrypted_text);
+    pendaftaran.namalengkap = encrypted_text;
     pendaftaran.tanggallahir = tanggallahir;
+    hill_cipher_encrypt(pendaftaran.tanggallahir.c_str(), key, encrypted_text);
+    pendaftaran.tanggallahir = encrypted_text;
 
     // Input data tambahan
     cout << "Masukkan Tanggal Periksa: ";
@@ -55,7 +72,7 @@ void pendaftaranPeriksa(const string& nik, const string& namalengkap, const stri
             pendaftaran.pilihandokter = "Dr. Wildan Gumilang (Dokter Umum)";
             break;
         case 2:
-            pendaftaran.pilihandokter = "Dr. Daffa Tridya (Spesialis Jantung)";
+            pendaftaran.pilihandokter = "Dr. Daffa Tridya (Spesialis Melahirkan)";
             break;
         case 3:
             pendaftaran.pilihandokter = "Dr. Agra Anisa (Spesialis Anak)";
@@ -76,18 +93,24 @@ void pendaftaranPeriksa(const string& nik, const string& namalengkap, const stri
     switch (bayar) {
         case 1:
             pendaftaran.carabayar = "BPJS Kesehatan";
+            hill_cipher_encrypt(pendaftaran.carabayar.c_str(), key, encrypted_text);
+            pendaftaran.carabayar = encrypted_text;
             break;
         case 2:
             pendaftaran.carabayar = "Pembayaran Reguler";
+            hill_cipher_encrypt(pendaftaran.carabayar.c_str(), key, encrypted_text);
+            pendaftaran.carabayar = encrypted_text;
             break;
         default:
             cout << "Pilihan cara pembayaran tidak valid. Memilih secara default Pembayaran Reguler.\n";
             pendaftaran.carabayar = "Pembayaran Reguler";
+            hill_cipher_encrypt(pendaftaran.carabayar.c_str(), key, encrypted_text);
+            pendaftaran.carabayar = encrypted_text;
             break;
     }
 
     // Simpan data ke dalam file
-    ofstream outFile("file/daftarperiksa.txt", ios::app); // Mode append agar tidak menghapus data yang sudah ada
+    ofstream outFile("file/daftarperiksa.txt"); // Mode append agar tidak menghapus data yang sudah ada
     if (outFile.is_open()) {
         outFile << pendaftaran.nomorPendaftaran << "|" << pendaftaran.nik << "|" << pendaftaran.namalengkap << "|" << pendaftaran.tanggallahir << "|"
                 << pendaftaran.tanggalperiksa << "|" << pendaftaran.pilihandokter << "|" << pendaftaran.carabayar << endl;
@@ -100,6 +123,13 @@ void pendaftaranPeriksa(const string& nik, const string& namalengkap, const stri
 
 // Menampilkan data pendaftaran periksa
 void tampilkanDataPeriksa() {
+    userDaftar pendaftaran;
+    int key[2][2] = {
+        {31, 59},
+        {17, 92}
+    };
+    char decrypted_text[100];
+    char encrypted_text[100];
     ifstream inFile("file/daftarperiksa.txt");
     if (inFile.is_open()) {
         cout << "===================================================================================================" << endl;
@@ -120,10 +150,33 @@ void tampilkanDataPeriksa() {
             getline(ss, pilihandokter, '|');
             getline(ss, carabayar);
 
+            hill_cipher_decrypt(nomorPendaftaran.c_str(), key, decrypted_text);
+            nomorPendaftaran = decrypted_text;
+            hill_cipher_decrypt(nik.c_str(), key, decrypted_text);
+            nik = decrypted_text;
+            hill_cipher_decrypt(namalengkap.c_str(), key, decrypted_text);
+            namalengkap = decrypted_text;
+            hill_cipher_decrypt(tanggallahir.c_str(), key, decrypted_text);
+            tanggallahir = decrypted_text;
+            hill_cipher_decrypt(carabayar.c_str(), key, decrypted_text);
+            carabayar = decrypted_text;            
+
             cout << nomorPendaftaran << "\t" << nik << "\t" << namalengkap << "\t" << tanggallahir << "\t" << tanggalperiksa << "\t" << pilihandokter << "\t" << carabayar << endl;
+
+            hill_cipher_decrypt(nomorPendaftaran.c_str(), key, decrypted_text);
+            nomorPendaftaran = decrypted_text;
+            hill_cipher_decrypt(nik.c_str(), key, decrypted_text);
+            nik = decrypted_text;
+            hill_cipher_decrypt(namalengkap.c_str(), key, decrypted_text);
+            namalengkap = decrypted_text;
+            hill_cipher_decrypt(tanggallahir.c_str(), key, decrypted_text);
+            tanggallahir = decrypted_text;
+            hill_cipher_decrypt(carabayar.c_str(), key, decrypted_text);
+            carabayar = decrypted_text;
         }
         cout << "===================================================================================================" << endl;
         inFile.close();
+        
     } else {
         cout << "Gagal membuka file daftarperiksa.txt.\n";
     }

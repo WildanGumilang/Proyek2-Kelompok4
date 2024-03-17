@@ -89,6 +89,8 @@ void tampilkanSuratHasilPemeriksaan(string& targetNik) {
     };
     char decrypted_text[100];
     char encrypted_text[100];
+    hill_cipher_encrypt(targetNik.c_str(), key, encrypted_text);
+    targetNik = encrypted_text;
     ifstream inFile("file/hasilperiksa.txt");
     if (inFile.is_open()) {
         cout << "==================================================================================================================" << endl;
@@ -122,7 +124,6 @@ void tampilkanSuratHasilPemeriksaan(string& targetNik) {
                 data.namalengkap = decrypted_text;
                 hill_cipher_decrypt(data.tanggallahir.c_str(), key, decrypted_text);
                 data.tanggallahir = decrypted_text;
-                                data.pilihandokter = decrypted_text;
                 hill_cipher_decrypt(data.hasilPemeriksaan.c_str(), key, decrypted_text);
                 data.hasilPemeriksaan = decrypted_text;
                 hill_cipher_decrypt(data.resepObat.c_str(), key, decrypted_text);
@@ -132,7 +133,8 @@ void tampilkanSuratHasilPemeriksaan(string& targetNik) {
                      << data.pilihandokter << "\t" << data.hasilPemeriksaan << "\t" << data.resepObat << endl;
             }
         }
-
+        hill_cipher_decrypt(targetNik.c_str(), key, decrypted_text);
+        targetNik = decrypted_text;
         if (!found) {
             cout << "Tidak ditemukan surat hasil pemeriksaan untuk NIK " << targetNik << endl;
         }

@@ -163,16 +163,6 @@ void tampilkanDataPeriksa() {
 
             cout << nomorPendaftaran << "\t" << nik << "\t" << namalengkap << "\t" << tanggallahir << "\t" << tanggalperiksa << "\t" << pilihandokter << "\t" << carabayar << endl;
 
-            hill_cipher_decrypt(nomorPendaftaran.c_str(), key, decrypted_text);
-            nomorPendaftaran = decrypted_text;
-            hill_cipher_decrypt(nik.c_str(), key, decrypted_text);
-            nik = decrypted_text;
-            hill_cipher_decrypt(namalengkap.c_str(), key, decrypted_text);
-            namalengkap = decrypted_text;
-            hill_cipher_decrypt(tanggallahir.c_str(), key, decrypted_text);
-            tanggallahir = decrypted_text;
-            hill_cipher_decrypt(carabayar.c_str(), key, decrypted_text);
-            carabayar = decrypted_text;
         }
         cout << "===================================================================================================" << endl;
         inFile.close();

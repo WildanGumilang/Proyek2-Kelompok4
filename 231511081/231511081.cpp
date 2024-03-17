@@ -1,46 +1,21 @@
 #include "231511081.h"
 #include "../231511067/231511067.h"
 #include "../231511082/231511082.h"
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-using namespace std;
 
-// Definisikan struct untuk data pendaftaran
-struct userDaftar {
-    string nomorPendaftaran;
-    string nik;
-    string namalengkap;
-    string tanggallahir;
-    string tanggalperiksa;
-    string pilihandokter;
-    string carabayar;
-};
-
-// Definisikan struct untuk data hasil pemeriksaan
-struct UserHasil {
-    string nomorpendaftaran;
-    string nik;
-    string namalengkap;
-    string tanggallahir;
-    string tanggalperiksa;
-    string pilihandokter;
-    string hasilPemeriksaan;
-    string resepObat;
-};
 
 // Fungsi untuk membuat surat hasil pemeriksaan
-void buatSuratHasilPemeriksaan(const string& nomorPendaftaran) {
-    userDaftar pendaftaran;
+void buatSuratHasilPemeriksaan() {
     int key[2][2] = {
         {31, 59},
         {17, 92}
     };
     char decrypted_text[100];
     char encrypted_text[100];
-
-
+    string nomorPendaftaran, nik, namalengkap, tanggallahir, tanggalperiksa, pilihandokter;
+    cout << "Masukkan Nomor Pendaftaran Pasien : ";
+    cin >> nomorPendaftaran;
+    hill_cipher_encrypt(nomorPendaftaran.c_str(), key, encrypted_text);
+    nomorPendaftaran = encrypted_text;
     // Baca data dari file daftarperiksa.txt
     ifstream inFile("file/daftarperiksa.txt");
     if (inFile.is_open()) {
@@ -54,25 +29,16 @@ void buatSuratHasilPemeriksaan(const string& nomorPendaftaran) {
             getline(ss, pendaftaran.namalengkap, '|');
             getline(ss, pendaftaran.tanggallahir, '|');
             getline(ss, pendaftaran.tanggalperiksa, '|');
-            getline(ss, pendaftaran.pilihandokter,'|');
-            getline(ss, pendaftaran.carabayar,'|');
-
-            hill_cipher_decrypt(pendaftaran.nomorPendaftaran.c_str(), key, decrypted_text);
-            pendaftaran.nomorPendaftaran = decrypted_text;
-            hill_cipher_decrypt(pendaftaran.nik.c_str(), key, decrypted_text);
-            pendaftaran.nik = decrypted_text;
-            hill_cipher_decrypt(pendaftaran.namalengkap.c_str(), key, decrypted_text);
-            pendaftaran.namalengkap = decrypted_text;
-            hill_cipher_decrypt(pendaftaran.tanggallahir.c_str(), key, decrypted_text);
-            pendaftaran.tanggallahir = decrypted_text;
-            hill_cipher_decrypt(pendaftaran.pilihandokter.c_str(), key, decrypted_text);
-            pendaftaran.pilihandokter = decrypted_text;
-            hill_cipher_decrypt(pendaftaran.carabayar.c_str(), key, decrypted_text);
-            pendaftaran.carabayar = decrypted_text;
+            getline(ss, pendaftaran.pilihandokter, '|');
 
             // Jika nomor pendaftaran ditemukan, ambil data pendaftaran
             if (pendaftaran.nomorPendaftaran == nomorPendaftaran) {
                 pendaftaranDitemukan = true;
+                nik = pendaftaran.nik;
+                namalengkap = pendaftaran.namalengkap;
+                tanggallahir = pendaftaran.tanggallahir;
+                tanggalperiksa = pendaftaran.tanggalperiksa;
+                pilihandokter = pendaftaran.pilihandokter;
                 break;
             }
         }
@@ -84,14 +50,18 @@ void buatSuratHasilPemeriksaan(const string& nomorPendaftaran) {
             cout << "Masukkan hasil pemeriksaan: ";
             cin.ignore();
             getline(cin, hasilPemeriksaan);
+            hill_cipher_encrypt(hasilPemeriksaan.c_str(), key, encrypted_text);
+            hasilPemeriksaan = encrypted_text;
 
             // Mengisi resep obat
             string resepObat;
             cout << "Masukkan resep obat: ";
             getline(cin, resepObat);
+            hill_cipher_encrypt(resepObat.c_str(), key, encrypted_text);
+            resepObat = encrypted_text;
 
             // Simpan data hasil pemeriksaan ke dalam file
-            ofstream outFile("file/hasilpemeriksaan.txt", ios::app); // Mode append agar tidak menghapus data yang sudah ada
+            ofstream outFile("file/hasilperiksa.txt", ios::app); // Mode append agar tidak menghapus data yang sudah ada
             if (outFile.is_open()) {
                 outFile << pendaftaran.nomorPendaftaran << "|" << pendaftaran.nik << "|" << pendaftaran.namalengkap << "|"
                         << pendaftaran.tanggallahir << "|" << pendaftaran.tanggalperiksa << "|" << pendaftaran.pilihandokter << "|"
@@ -112,7 +82,13 @@ void buatSuratHasilPemeriksaan(const string& nomorPendaftaran) {
 
 
 // Fungsi untuk menampilkan surat hasil pemeriksaan berdasarkan nik
-void tampilkanSuratHasilPemeriksaan(const string& targetNik) {
+void tampilkanSuratHasilPemeriksaan(string& targetNik) {
+    int key[2][2] = {
+        {31, 59},
+        {17, 92}
+    };
+    char decrypted_text[100];
+    char encrypted_text[100];
     ifstream inFile("file/hasilperiksa.txt");
     if (inFile.is_open()) {
         cout << "==================================================================================================================" << endl;
@@ -137,6 +113,21 @@ void tampilkanSuratHasilPemeriksaan(const string& targetNik) {
             
             if (data.nik == targetNik) {
                 found = true;
+
+                hill_cipher_decrypt(data.nomorpendaftaran.c_str(), key, decrypted_text);
+                data.nomorpendaftaran = decrypted_text;
+                hill_cipher_decrypt(data.nik.c_str(), key, decrypted_text);
+                data.nik = decrypted_text;
+                hill_cipher_decrypt(data.namalengkap.c_str(), key, decrypted_text);
+                data.namalengkap = decrypted_text;
+                hill_cipher_decrypt(data.tanggallahir.c_str(), key, decrypted_text);
+                data.tanggallahir = decrypted_text;
+                                data.pilihandokter = decrypted_text;
+                hill_cipher_decrypt(data.hasilPemeriksaan.c_str(), key, decrypted_text);
+                data.hasilPemeriksaan = decrypted_text;
+                hill_cipher_decrypt(data.resepObat.c_str(), key, decrypted_text);
+                data.resepObat = decrypted_text;
+
                 cout << data.nomorpendaftaran << "\t\t" << data.nik << "\t" << data.namalengkap << "\t" << data.tanggallahir << "\t" << data.tanggalperiksa << "\t" 
                      << data.pilihandokter << "\t" << data.hasilPemeriksaan << "\t" << data.resepObat << endl;
             }

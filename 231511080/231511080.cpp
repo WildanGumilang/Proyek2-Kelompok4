@@ -110,7 +110,7 @@ void pendaftaranPeriksa(const string& nik, const string& namalengkap, const stri
     }
 
     // Simpan data ke dalam file
-    ofstream outFile("file/daftarperiksa.txt"); // Mode append agar tidak menghapus data yang sudah ada
+    ofstream outFile("file/daftarperiksa.txt", ios::app); // Mode append agar tidak menghapus data yang sudah ada
     if (outFile.is_open()) {
         outFile << pendaftaran.nomorPendaftaran << "|" << pendaftaran.nik << "|" << pendaftaran.namalengkap << "|" << pendaftaran.tanggallahir << "|"
                 << pendaftaran.tanggalperiksa << "|" << pendaftaran.pilihandokter << "|" << pendaftaran.carabayar << endl;

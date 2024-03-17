@@ -1,10 +1,14 @@
 #include "231511087/231511087.h"
+#include "231511067/231511067.h"
+#include "231511080/231511080.h"
+#include "231511081/231511081.h"
+#include "231511082/231511082.h"
 
 using namespace std;
 
 int main() {
     int pilihan;
-    string namaAdmin, passwordAdmin, nomorAdmin;
+    string namaAdmin, passwordAdmin, nomorAdmin, jawaban;
     bool loginBerhasil = false;
 
     //HALAMAN AWAL
@@ -31,7 +35,7 @@ int main() {
                 case 1:
                     // HALAMAN LOGIN
                     system("cls");
-                    loginBerhasil = loginAdmin(namaAdmin, passwordAdmin, nomorAdmin);
+                    loginBerhasil = loginAdmin(namaAdmin);
                     break;
                 case 2:
                     // KELUAR
@@ -53,8 +57,7 @@ int main() {
             cout << "||                                                                                                     ||\n";
             cout << "||     1. Melihat Data Pasien                                                                          ||\n";
             cout << "||     2. Melihat Data Pendaftaran Pemeriksaan                                                         ||\n";
-            cout << "||     3. Ganti Password Akun                                                                          ||\n";
-            cout << "||     4. KELUAR                                                                                       ||\n";
+            cout << "||     3. KELUAR                                                                                       ||\n";
             cout << "||                                                                                                     ||\n";
             cout << "|| =================================================================================================== ||\n\n";
             cout << "Pilihan anda : ";
@@ -63,19 +66,19 @@ int main() {
                 case 1:
                     system("cls");
                     // HALAMAN MENAMPILKAN DATA PASIEN
-                    // dataPasien();
+                    tampilkanSeluruhDataPasien();
                     break;
                 case 2:
                     system("cls");
                     // HALAMAN MENAMPILKAN DATA PENDAFTARAN PASIEN
-                    // melihatDataPendaftaran();
+                    tampilkanDataPeriksa();
+                    cout << "Ingin Membuat Hasil Periksa Pasien? (y/n)";
+                    cin >> jawaban;
+                    if (jawaban == "y" || jawaban == "ya"){
+                        buatSuratHasilPemeriksaan();
+                    }
                     break;
                 case 3:
-                    system("cls");
-                    //HALAMAN GANTI PASSWORD
-                    gantiPasswordAdmin();
-                    break;
-                case 4:
                     // KELUAR
                     cout << "Terima kasih telah menggunakan layanan kami.\n";
                     return 0;

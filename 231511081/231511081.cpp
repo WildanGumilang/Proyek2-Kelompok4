@@ -1,4 +1,6 @@
-
+#include "231511081.h"
+#include "../231511067/231511067.h"
+#include "../231511082/231511082.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -30,6 +32,15 @@ struct UserHasil {
 
 // Fungsi untuk membuat surat hasil pemeriksaan
 void buatSuratHasilPemeriksaan(const string& nomorPendaftaran) {
+    userDaftar pendaftaran;
+    int key[2][2] = {
+        {31, 59},
+        {17, 92}
+    };
+    char decrypted_text[100];
+    char encrypted_text[100];
+
+
     // Baca data dari file daftarperiksa.txt
     ifstream inFile("file/daftarperiksa.txt");
     if (inFile.is_open()) {
@@ -43,7 +54,21 @@ void buatSuratHasilPemeriksaan(const string& nomorPendaftaran) {
             getline(ss, pendaftaran.namalengkap, '|');
             getline(ss, pendaftaran.tanggallahir, '|');
             getline(ss, pendaftaran.tanggalperiksa, '|');
-            getline(ss, pendaftaran.pilihandokter, '|');
+            getline(ss, pendaftaran.pilihandokter,'|');
+            getline(ss, pendaftaran.carabayar,'|');
+
+            hill_cipher_decrypt(pendaftaran.nomorPendaftaran.c_str(), key, decrypted_text);
+            pendaftaran.nomorPendaftaran = decrypted_text;
+            hill_cipher_decrypt(pendaftaran.nik.c_str(), key, decrypted_text);
+            pendaftaran.nik = decrypted_text;
+            hill_cipher_decrypt(pendaftaran.namalengkap.c_str(), key, decrypted_text);
+            pendaftaran.namalengkap = decrypted_text;
+            hill_cipher_decrypt(pendaftaran.tanggallahir.c_str(), key, decrypted_text);
+            pendaftaran.tanggallahir = decrypted_text;
+            hill_cipher_decrypt(pendaftaran.pilihandokter.c_str(), key, decrypted_text);
+            pendaftaran.pilihandokter = decrypted_text;
+            hill_cipher_decrypt(pendaftaran.carabayar.c_str(), key, decrypted_text);
+            pendaftaran.carabayar = decrypted_text;
 
             // Jika nomor pendaftaran ditemukan, ambil data pendaftaran
             if (pendaftaran.nomorPendaftaran == nomorPendaftaran) {

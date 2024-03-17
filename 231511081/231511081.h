@@ -1,4 +1,5 @@
 #include "231511081.cpp"
+
 using namespace std;
 
 // Fungsi untuk mengambil hasil pasiaen

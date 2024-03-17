@@ -1,6 +1,6 @@
-#include "231511080.cpp"
+#include <string>
 
-extern int nomorPendaftaran; //variabel statis untuk nomor pendaftaran
+using namespace std;
 
 string generateNomorPendaftaran(); //fungsi untuk menghasilkan nomor pendaftaran acak
 void pendaftaranPeriksa(const string& nik, const string& namalengkap, const string& tanggallahir); //fungsi untuk mengisi pendaftaran pemeriksaan

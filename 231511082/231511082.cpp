@@ -115,8 +115,6 @@ void tampilkanSeluruhDataPasien() {
 
             hill_cipher_decrypt(user.nik.c_str(), key, decrypted_text);
             user.nik = decrypted_text;
-            hill_cipher_decrypt(user.password.c_str(), key, decrypted_text);
-            user.password = decrypted_text;
             hill_cipher_decrypt(user.namalengkap.c_str(), key, decrypted_text);
             user.namalengkap = decrypted_text;
             hill_cipher_decrypt(user.tanggallahir.c_str(), key, decrypted_text);
@@ -133,11 +131,9 @@ void tampilkanSeluruhDataPasien() {
         cout << "Data Pasien:" << endl;
         for (const auto& user : userData) {
             cout << "NIK: " << user.nik << endl;
-            cout << "Password: " << user.password << endl;
             cout << "Nama Lengkap: " << user.namalengkap << endl;
             cout << "Tanggal Lahir: " << user.tanggallahir << endl;
             cout << "Alamat: " << user.alamat << endl;
-            cout << "Clue Keamanan: " << user.clueKeamanan << endl;
             cout << "-------------------------------------------" << endl;
         }
     } else {

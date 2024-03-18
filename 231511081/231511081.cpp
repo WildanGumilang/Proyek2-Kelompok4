@@ -5,17 +5,11 @@
 
 
 void buatSuratHasilPemeriksaan() {
-    int key[2][2] = {
-        {31, 59},
-        {17, 92}
-    };
-    char decrypted_text[100];
-    char encrypted_text[100];
+
     string nomorPendaftaran, nik, namalengkap, tanggallahir, tanggalperiksa, pilihandokter;
     cout << "Masukkan Nomor Pendaftaran Pasien : ";
     cin >> nomorPendaftaran;
-    hill_cipher_encrypt(nomorPendaftaran.c_str(), key, encrypted_text);
-    nomorPendaftaran = encrypted_text;
+    nomorPendaftaran = hill_cipher_encrypt(nomorPendaftaran);
     
     ifstream inFile("file/daftarperiksa.txt");
     if (inFile.is_open()) {
@@ -50,15 +44,13 @@ void buatSuratHasilPemeriksaan() {
             cout << "Masukkan hasil pemeriksaan: ";
             cin.ignore();
             getline(cin, hasilPemeriksaan);
-            hill_cipher_encrypt(hasilPemeriksaan.c_str(), key, encrypted_text);
-            hasilPemeriksaan = encrypted_text;
+            hasilPemeriksaan = hill_cipher_encrypt(hasilPemeriksaan);
 
             // Mengisi resep obat
             string resepObat;
             cout << "Masukkan resep obat: ";
             getline(cin, resepObat);
-            hill_cipher_encrypt(resepObat.c_str(), key, encrypted_text);
-            resepObat = encrypted_text;
+            resepObat = hill_cipher_encrypt(resepObat);
 
             
             ofstream outFile("file/hasilperiksa.txt", ios::app); 
@@ -83,14 +75,8 @@ void buatSuratHasilPemeriksaan() {
 
 
 void tampilkanSuratHasilPemeriksaan(string& targetNik) {
-    int key[2][2] = {
-        {31, 59},
-        {17, 92}
-    };
-    char decrypted_text[100];
-    char encrypted_text[100];
-    hill_cipher_encrypt(targetNik.c_str(), key, encrypted_text);
-    targetNik = encrypted_text;
+
+    targetNik = hill_cipher_encrypt(targetNik);
     ifstream inFile("file/hasilperiksa.txt");
     if (inFile.is_open()) {
         cout << "==================================================================================================================" << endl;
@@ -116,25 +102,18 @@ void tampilkanSuratHasilPemeriksaan(string& targetNik) {
             if (data.nik == targetNik) {
                 found = true;
 
-                hill_cipher_decrypt(data.nomorpendaftaran.c_str(), key, decrypted_text);
-                data.nomorpendaftaran = decrypted_text;
-                hill_cipher_decrypt(data.nik.c_str(), key, decrypted_text);
-                data.nik = decrypted_text;
-                hill_cipher_decrypt(data.namalengkap.c_str(), key, decrypted_text);
-                data.namalengkap = decrypted_text;
-                hill_cipher_decrypt(data.tanggallahir.c_str(), key, decrypted_text);
-                data.tanggallahir = decrypted_text;
-                hill_cipher_decrypt(data.hasilPemeriksaan.c_str(), key, decrypted_text);
-                data.hasilPemeriksaan = decrypted_text;
-                hill_cipher_decrypt(data.resepObat.c_str(), key, decrypted_text);
-                data.resepObat = decrypted_text;
+                data.nomorpendaftaran = hill_cipher_decrypt(data.nomorpendaftaran);
+                data.nik = hill_cipher_decrypt(data.nik);
+                data.namalengkap = hill_cipher_decrypt(data.namalengkap);
+                data.tanggallahir = hill_cipher_decrypt(data.tanggallahir);
+                data.hasilPemeriksaan = hill_cipher_decrypt(data.hasilPemeriksaan);
+                data.resepObat = hill_cipher_decrypt(data.resepObat);
 
                 cout << data.nomorpendaftaran << "\t\t" << data.nik << "\t" << data.namalengkap << "\t" << data.tanggallahir << "\t" << data.tanggalperiksa << "\t" 
                      << data.pilihandokter << "\t" << data.hasilPemeriksaan << "\t" << data.resepObat << endl;
             }
         }
-        hill_cipher_decrypt(targetNik.c_str(), key, decrypted_text);
-        targetNik = decrypted_text;
+        targetNik = hill_cipher_decrypt(targetNik);
         if (!found) {
             cout << "Tidak ditemukan surat hasil pemeriksaan untuk NIK " << targetNik << endl;
         }

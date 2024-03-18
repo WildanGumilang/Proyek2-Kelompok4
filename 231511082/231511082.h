@@ -7,7 +7,5 @@
 
 using namespace std;
 
-
-
-void hill_cipher_decrypt(const char* encrypted_text, const int key[2][2], char* decrypted_text);
+string hill_cipher_decrypt(const string& encrypted_text);
 void tampilkanSeluruhDataPasien();

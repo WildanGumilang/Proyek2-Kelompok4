@@ -3,7 +3,7 @@
 #include "../231511082/231511082.h"
 
 
-// Fungsi untuk membuat surat hasil pemeriksaan
+
 void buatSuratHasilPemeriksaan() {
     int key[2][2] = {
         {31, 59},
@@ -16,7 +16,7 @@ void buatSuratHasilPemeriksaan() {
     cin >> nomorPendaftaran;
     hill_cipher_encrypt(nomorPendaftaran.c_str(), key, encrypted_text);
     nomorPendaftaran = encrypted_text;
-    // Baca data dari file daftarperiksa.txt
+    
     ifstream inFile("file/daftarperiksa.txt");
     if (inFile.is_open()) {
         userDaftar pendaftaran;
@@ -31,7 +31,7 @@ void buatSuratHasilPemeriksaan() {
             getline(ss, pendaftaran.tanggalperiksa, '|');
             getline(ss, pendaftaran.pilihandokter, '|');
 
-            // Jika nomor pendaftaran ditemukan, ambil data pendaftaran
+           
             if (pendaftaran.nomorPendaftaran == nomorPendaftaran) {
                 pendaftaranDitemukan = true;
                 nik = pendaftaran.nik;
@@ -45,7 +45,7 @@ void buatSuratHasilPemeriksaan() {
         inFile.close();
 
         if (pendaftaranDitemukan) {
-            // Mengisi hasil pemeriksaan
+            
             string hasilPemeriksaan;
             cout << "Masukkan hasil pemeriksaan: ";
             cin.ignore();
@@ -60,8 +60,8 @@ void buatSuratHasilPemeriksaan() {
             hill_cipher_encrypt(resepObat.c_str(), key, encrypted_text);
             resepObat = encrypted_text;
 
-            // Simpan data hasil pemeriksaan ke dalam file
-            ofstream outFile("file/hasilperiksa.txt", ios::app); // Mode append agar tidak menghapus data yang sudah ada
+            
+            ofstream outFile("file/hasilperiksa.txt", ios::app); 
             if (outFile.is_open()) {
                 outFile << pendaftaran.nomorPendaftaran << "|" << pendaftaran.nik << "|" << pendaftaran.namalengkap << "|"
                         << pendaftaran.tanggallahir << "|" << pendaftaran.tanggalperiksa << "|" << pendaftaran.pilihandokter << "|"
@@ -81,7 +81,7 @@ void buatSuratHasilPemeriksaan() {
 
 
 
-// Fungsi untuk menampilkan surat hasil pemeriksaan berdasarkan nik
+
 void tampilkanSuratHasilPemeriksaan(string& targetNik) {
     int key[2][2] = {
         {31, 59},

@@ -72,7 +72,7 @@ void pendaftaranPeriksa(const string& nik, const string& namalengkap, const stri
             pendaftaran.pilihandokter = "Dr. Wildan Gumilang (Dokter Umum)";
             break;
         case 2:
-            pendaftaran.pilihandokter = "Dr. Daffa Tridya (Spesialis Melahirkan)";
+            pendaftaran.pilihandokter = "Dr. Daffa Tridya (Spesialis Jantung)";
             break;
         case 3:
             pendaftaran.pilihandokter = "Dr. Agra Anisa (Spesialis Anak)";

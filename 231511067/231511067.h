@@ -5,7 +5,7 @@
 
 using namespace std;
 
-void hill_cipher_encrypt(const char* text, const int key[2][2], char* encrypted_text);
+string hill_cipher_encrypt(const string& plaintext);
 void tampilkanDataPasienByNIK(std::string& nik);
 
 #endif

@@ -27,19 +27,29 @@ char mod[94] = {
 };
 
 
-void hill_cipher_encrypt(const char* plaintext, const int key[2][2], char* encrypted_text) {
-    int len = strlen(plaintext);
+string hill_cipher_encrypt(const string& plaintext) {
+    char mod[94] = {
+        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '-', '+', '=', '{', '}', 
+        '[', ']', '<', '>', '.', ',', ';', '"', '\'', '`', '\\', '/', '?', ':', '~', ' '
+    };
+    int key[2][2] = {
+        {2, 1},
+        {3, 4}
+    };
+    int len = plaintext.length();
 
     if (len % 2 != 0) {
         len++;
     }
 
-    char padded_plaintext[len + 1];
-    strcpy(padded_plaintext, plaintext);
-    if (len > strlen(plaintext)) {
-        padded_plaintext[len - 1] = 'X';
-        padded_plaintext[len] = '\0';
+    string padded_plaintext = plaintext;
+    if (len > plaintext.length()) {
+        padded_plaintext += 'X';
     }
+
+    string encrypted_text = "";
 
     for (int i = 0; i < len; i += 2) {
         int x1 = -1, x2 = -1;
@@ -54,28 +64,22 @@ void hill_cipher_encrypt(const char* plaintext, const int key[2][2], char* encry
 
         if (x1 == -1 || x2 == -1) {
             cerr << "Invalid character in plaintext." << endl;
-            return;
+            return "";
         }
 
         int y1 = (key[0][0] * x1 + key[0][1] * x2) % 94;
         int y2 = (key[1][0] * x1 + key[1][1] * x2) % 94;
 
-        encrypted_text[i] = mod[y1];
-        encrypted_text[i + 1] = mod[y2];
+        encrypted_text += mod[y1];
+        encrypted_text += mod[y2];
     }
-    encrypted_text[len] = '\0';
+    return encrypted_text;
 }
 
 void tampilkanDataPasienByNIK(string& nik) {
-    int key[2][2] = {
-        {31, 59},
-        {17, 92}
-    };
-    char decrypted_text[100];
-    char encrypted_text[100];
 
-    hill_cipher_encrypt(nik.c_str(), key, encrypted_text);
-    nik = encrypted_text;
+    nik = hill_cipher_encrypt(nik);
+
     ifstream inFile("file/akun_pengguna.txt");
     if (inFile.is_open()) {
         string line;
@@ -93,18 +97,12 @@ void tampilkanDataPasienByNIK(string& nik) {
 
             if (userData.nik == nik) {
 
-                hill_cipher_decrypt(userData.nik.c_str(), key, decrypted_text);
-                userData.nik = decrypted_text;
-                hill_cipher_decrypt(userData.password.c_str(), key, decrypted_text);
-                userData.password = decrypted_text;
-                hill_cipher_decrypt(userData.namalengkap.c_str(), key, decrypted_text);
-                userData.namalengkap = decrypted_text;
-                hill_cipher_decrypt(userData.tanggallahir.c_str(), key, decrypted_text);
-                userData.tanggallahir = decrypted_text;
-                hill_cipher_decrypt(userData.alamat.c_str(), key, decrypted_text);
-                userData.alamat = decrypted_text;
-                hill_cipher_decrypt(userData.clueKeamanan.c_str(), key, decrypted_text);
-                userData.clueKeamanan = decrypted_text;
+                userData.nik = hill_cipher_decrypt(userData.nik);
+                userData.password = hill_cipher_decrypt(userData.password);
+                userData.namalengkap = hill_cipher_decrypt(userData.namalengkap);
+                userData.tanggallahir = hill_cipher_decrypt(userData.tanggallahir);
+                userData.alamat = hill_cipher_decrypt(userData.alamat);
+                userData.clueKeamanan = hill_cipher_decrypt(userData.clueKeamanan);
 
                 cout << "+---------------------------------------------+\n";
                 cout << "|            Informasi Pengguna              |\n";
@@ -123,27 +121,12 @@ void tampilkanDataPasienByNIK(string& nik) {
                 cout << "+---------------------------------------------+\n";
                 found = true;
 
-
-                hill_cipher_encrypt(userData.nik.c_str(), key, encrypted_text);
-                userData.nik = encrypted_text;
-                hill_cipher_encrypt(userData.password.c_str(), key, encrypted_text);
-                userData.password = encrypted_text;
-                hill_cipher_encrypt(userData.namalengkap.c_str(), key, encrypted_text);
-                userData.namalengkap = encrypted_text;
-                hill_cipher_encrypt(userData.tanggallahir.c_str(), key, encrypted_text);
-                userData.tanggallahir = encrypted_text;
-                hill_cipher_encrypt(userData.alamat.c_str(), key, encrypted_text);
-                userData.alamat = encrypted_text;
-                hill_cipher_encrypt(userData.clueKeamanan.c_str(), key, encrypted_text);
-                userData.clueKeamanan = encrypted_text;
                 break; // Keluar dari loop setelah menemukan data yang dicari
             }
         }
         inFile.close();
 
-        hill_cipher_decrypt(nik.c_str(), key, decrypted_text);
-        nik = decrypted_text;
-        
+        nik = hill_cipher_decrypt(nik);
         if (!found) {
             cout << "Data pasien dengan NIK " << nik << " tidak ditemukan." << endl;
         }

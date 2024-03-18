@@ -16,12 +16,7 @@ void simpanDataPasien(const UserData& userData) {
 }
 
 void lupaPassword() {
-    int key[2][2] = {
-        {31, 59},
-        {17, 92}
-    };
-    char decrypted_text[100];
-    char encrypted_text[100];
+
     string nik, jawaban;
     bool ditemukan = false;
 
@@ -29,13 +24,11 @@ void lupaPassword() {
     cout << " ------------------------------- Masukkan NIK dan Jawaban Clue Keamanan -------------------------------- \n\n";
     cout << "Masukkan NIK : ";
     cin >> nik;
-    hill_cipher_encrypt(nik.c_str(), key, encrypted_text);
-    nik = encrypted_text;
+    nik = hill_cipher_encrypt(nik);
     cout << "Masukkan Jawaban Clue Keamanan : ";
     cin.ignore();
     getline(cin, jawaban);
-    hill_cipher_encrypt(jawaban.c_str(), key, encrypted_text);
-    jawaban = encrypted_text;
+    jawaban = hill_cipher_encrypt(jawaban);
 
 
     ifstream inFile("file/akun_pengguna.txt");
@@ -56,8 +49,7 @@ void lupaPassword() {
             if (userData.nik == nik && jawaban == userData.clueKeamanan) {
                 cout << "Masukkan Password Baru : ";
                 cin >> userData.password;
-                hill_cipher_encrypt(userData.password.c_str(), key, encrypted_text);
-                userData.password = encrypted_text;
+                userData.password = hill_cipher_encrypt(userData.password);
                 ditemukan = true;
             }
 
@@ -93,27 +85,19 @@ void lupaPassword() {
 void registrasi() {
     UserData userData;
 
-    int key[2][2] = {
-        {31, 59},
-        {17, 92}
-    };
-    char decrypted_text[100];
-    char encrypted_text[100];
-
     cout << " ==================================== Halaman Registrasi ============================================ \n\n";
     cout << " ---------------------------------- Lengkapi Data Diri Anda ----------------------------------------- \n\n";
     cout << "NIK : ";
     cin >> userData.nik; 
-    hill_cipher_encrypt(userData.nik.c_str(), key, encrypted_text);
-    userData.nik = encrypted_text;
+
     while(userData.nik.length() != 16) {
         system("cls");
         cout << "NIK yang anda masukkan tidak valid. Silakan masukkan lagi.\n";
         cout << "NIK : ";
         cin >> userData.nik;
-        hill_cipher_encrypt(userData.nik.c_str(), key, encrypted_text);
-        userData.nik = encrypted_text;
     }
+
+    userData.nik = hill_cipher_encrypt(userData.nik);
 
     ifstream inFile("file/akun_pengguna.txt");
     if (inFile.is_open()) {
@@ -135,29 +119,24 @@ void registrasi() {
     cout << "Nama Lengkap : ";
     cin.ignore();
     getline(cin, userData.namalengkap);
-    hill_cipher_encrypt(userData.namalengkap.c_str(), key, encrypted_text);
-    userData.namalengkap = encrypted_text;
+    userData.namalengkap = hill_cipher_encrypt(userData.namalengkap);
     cout << "Tanggal Lahir (dd/mm/yyyy) : ";
     cin >> userData.tanggallahir;
-    hill_cipher_encrypt(userData.tanggallahir.c_str(), key, encrypted_text);
-    userData.tanggallahir = encrypted_text;
+    userData.tanggallahir = hill_cipher_encrypt(userData.tanggallahir);
     cout << "Alamat Rumah : ";
     cin.ignore();
     getline(cin, userData.alamat);
-    hill_cipher_encrypt(userData.alamat.c_str(), key, encrypted_text);
-    userData.alamat = encrypted_text;
+    userData.alamat = hill_cipher_encrypt(userData.alamat);
     cout << "Masukkan Password : ";
-    cin >> userData.password;
-    hill_cipher_encrypt(userData.password.c_str(), key, encrypted_text);
-    userData.password = encrypted_text;
+    getline(cin, userData.password);
+    userData.password = hill_cipher_encrypt(userData.password);
 
     cout << "Membuat Clue Keamanan\n";
     cout << "Note : Clue keamanan ini akan digunakan jika anda lupa password pada suatu saat. Isi dengan yang mudah diingat oleh anda!\n\n";
     cout << "Masukkan Clue Keamanan Anda : ";
     cin.ignore();
     getline(cin, userData.clueKeamanan);
-    hill_cipher_encrypt(userData.clueKeamanan.c_str(), key, encrypted_text);
-    userData.clueKeamanan = encrypted_text;
+    userData.clueKeamanan = hill_cipher_encrypt(userData.clueKeamanan);
     
     // Simpan data pengguna yang telah dienkripsi ke dalam file
     simpanDataPasien(userData);
@@ -166,12 +145,6 @@ void registrasi() {
 
 
 bool login(string& nik, string& namalengkap, string& tanggallahir, string& alamat, string& password) {
-    int key[2][2] = {
-        {31, 59},
-        {17, 92}
-    };
-    char decrypted_text[100];
-    char encrypted_text[100];
 
     bool cek = false;
 
@@ -187,13 +160,11 @@ bool login(string& nik, string& namalengkap, string& tanggallahir, string& alama
         cin >> nik;
 
     }
-    hill_cipher_encrypt(nik.c_str(), key, encrypted_text);
-    nik = encrypted_text;
+    nik = hill_cipher_encrypt(nik);
 
     cout << "Masukkan Password : ";
     cin >> password;
-    hill_cipher_encrypt(password.c_str(), key, encrypted_text);
-    password = encrypted_text;
+    password = hill_cipher_encrypt(password);
 
     ifstream input("file/akun_pengguna.txt");
     if (input.is_open()) {
@@ -215,16 +186,11 @@ bool login(string& nik, string& namalengkap, string& tanggallahir, string& alama
                 tanggallahir = userData.tanggallahir;
                 alamat = userData.alamat;
                 
-                hill_cipher_decrypt(nik.c_str(), key, decrypted_text);
-                nik = decrypted_text;
-                hill_cipher_decrypt(password.c_str(), key, decrypted_text);
-                password = decrypted_text;
-                hill_cipher_decrypt(namalengkap.c_str(), key, decrypted_text);
-                namalengkap = decrypted_text;
-                hill_cipher_decrypt(tanggallahir.c_str(), key, decrypted_text);
-                tanggallahir = decrypted_text;
-                hill_cipher_decrypt(alamat.c_str(), key, decrypted_text);
-                alamat = decrypted_text;
+                nik = hill_cipher_decrypt(nik);
+                password = hill_cipher_decrypt(password);
+                namalengkap = hill_cipher_decrypt(namalengkap);
+                tanggallahir = hill_cipher_decrypt(tanggallahir);
+                alamat = hill_cipher_decrypt(alamat);
                 break;
             }
         }
@@ -264,21 +230,18 @@ bool loginAdmin(string& namaAdmin) {
 
     cout << "Masukkan Nomor Admin : ";
     cin >> nomorAdmin;
-    hill_cipher_encrypt(nomorAdmin.c_str(), key, encrypted_text);
-    nomorAdmin = encrypted_text;
     while(nomorAdmin.length() != 6) {
         system("cls");
         cout << "NIK yang anda masukkan tidak valid. Silakan masukkan lagi.\n";
         cout << "Nomor Admin : ";
         cin >> nomorAdmin;
-        hill_cipher_encrypt(nomorAdmin.c_str(), key, encrypted_text);
-    nomorAdmin = encrypted_text;
     }
     
+    nomorAdmin = hill_cipher_encrypt(nomorAdmin);
+
     cout << "Masukkan Password : ";
     cin >> password;
-    hill_cipher_encrypt(password.c_str(), key, encrypted_text);
-    password = encrypted_text;
+    password = hill_cipher_encrypt(password);
 
     ifstream input("file/akun_admin.txt");
     if (input.is_open()) {
@@ -294,8 +257,7 @@ bool loginAdmin(string& namaAdmin) {
                 cek = true;
                 namaAdmin = adminData.namaAdmin;
 
-                hill_cipher_decrypt(namaAdmin.c_str(), key, decrypted_text);
-                namaAdmin = decrypted_text;
+                namaAdmin = hill_cipher_decrypt(namaAdmin);
                 break;
             }
         }

@@ -1,25 +1,6 @@
 #include "231511080.h"
 #include "../231511067/231511067.h"
 #include "../231511082/231511082.h"
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <cstdlib>
-#include <ctime>
-
-using namespace std;
-
-// Definisikan struct untuk data pendaftaran
-struct userDaftar {
-    string nomorPendaftaran;
-    string nik;
-    string namalengkap;
-    string tanggallahir;
-    string tanggalperiksa;
-    string pilihandokter;
-    string carabayar;
-};
 
 // Variabel statis untuk nomor pendaftaran
 static int nomorPendaftaran = 1;

@@ -27,9 +27,9 @@ struct AdminData {
 };
 
 
-void simpanDataPasien(const UserData& userData);
-void lupaPassword();
-void registrasi();
+bool simpanDataPasien(const UserData& userData);
+bool lupaPassword();
+bool registrasi();
 bool login(string& nik, string& namalengkap, string& tanggallahir, string& alamat, string& password);
 bool loginAdmin(string& namaAdmin);
 int countDeterminan(kAddr awal);

@@ -1,20 +1,19 @@
 #include "231511087.h"
 
-void simpanDataPasien(const UserData& userData) {
+bool simpanDataPasien(const UserData& userData) {
     ofstream outFile("file/akun_pengguna.txt", ios::app);
     if (outFile.is_open()) {
         outFile << userData.nik << "|" << userData.password << "|" << userData.namalengkap << "|" << userData.tanggallahir << "|" << userData.alamat << "|" << userData.clueKeamanan << endl;
         outFile.close();
         system("cls");
-        cout << "Data Berhasil Disimpan.\n\n";
+        return true;
     } else {
         system("cls");
-        cout << "Gagal menyimpan data.\n";
+        return false;
     }
 }
 
-void lupaPassword() {
-
+bool lupaPassword() {
     string nik, jawaban;
     bool ditemukan = false;
 
@@ -22,12 +21,19 @@ void lupaPassword() {
     cout << " ------------------------------- Masukkan NIK dan Jawaban Clue Keamanan -------------------------------- \n\n";
     cout << "Masukkan NIK : ";
     cin >> nik;
-    nik = hill_cipher_encrypt(nik);
-    cout << "Masukkan Jawaban Clue Keamanan : ";
     cin.ignore();
+    while(nik.length() != 16) {
+        system("cls");
+        cout << "NIK yang anda masukkan tidak valid. Silakan masukkan lagi.\n";
+        cout << "Masukkan NIK : ";
+        cin >> nik;
+        cin.ignore();
+    }
+    nik = hill_cipher_encrypt(nik);
+
+    cout << "Masukkan Jawaban Clue Keamanan : ";
     getline(cin, jawaban);
     jawaban = hill_cipher_encrypt(jawaban);
-
 
     ifstream inFile("file/akun_pengguna.txt");
     if (inFile.is_open()) {
@@ -46,18 +52,23 @@ void lupaPassword() {
 
             if (userData.nik == nik && jawaban == userData.clueKeamanan) {
                 cout << "Masukkan Password Baru : ";
-                cin >> userData.password;
+                getline(cin, userData.password);
+                while(userData.password.find('|') != string::npos || userData.password.find(' ') != string::npos) {
+                    system("cls");
+                    cout << "Password tidak valid. Pastikan tidak menggunakan spasi atau simbol '|'. Silahkan masukkan lagi.\n";
+                    cout << "Masukkan Password Baru: ";
+                    getline(cin, userData.password);
+                }
                 userData.password = hill_cipher_encrypt(userData.password);
                 ditemukan = true;
             }
-
             updatedUsersData.push_back(userData);
         }
         inFile.close();
 
         if (!ditemukan) {
             cout << "NIK atau clue keamanan yang anda masukkan tidak cocok.\n\n";
-            lupaPassword();
+            return false;  
         }
 
         ofstream outFile("file/akun_pengguna.txt");
@@ -67,34 +78,33 @@ void lupaPassword() {
             }
             outFile.close();
             system("cls");
-            cout << " ------------------------------ Password Berhasil Diganti! ----------------------------------------- \n\n";
+            return true;
         } else {
             system("cls");
-            cout << "Gagal mengganti password.\n";
+            return false; 
         }
     } else {
         system("cls");
         cout << "Gagal mengakses penyimpanan data.\n";
+        return false;  
     }
-    
-
 }
 
-void registrasi() {
+bool registrasi() {
     UserData userData;
 
     cout << " ==================================== Halaman Registrasi ============================================ \n\n";
     cout << " ---------------------------------- Lengkapi Data Diri Anda ----------------------------------------- \n\n";
     cout << "NIK : ";
     cin >> userData.nik; 
-
-    while(userData.nik.length() != 16) {
+    cin.ignore();
+    while(userData.nik.length() != 16 || userData.nik.find('|') != string::npos) {
         system("cls");
         cout << "NIK yang anda masukkan tidak valid. Silakan masukkan lagi.\n";
         cout << "NIK : ";
         cin >> userData.nik;
+        cin.ignore();
     }
-
     userData.nik = hill_cipher_encrypt(userData.nik);
 
     ifstream inFile("file/akun_pengguna.txt");
@@ -115,29 +125,66 @@ void registrasi() {
     }
 
     cout << "Nama Lengkap : ";
-    cin.ignore();
     getline(cin, userData.namalengkap);
+    while(userData.namalengkap.find('|') != string::npos) {
+        system("cls");
+        cout << "Pastikan tidak menggunakan simbol '|'. Silahkan masukkan lagi.\n";
+        cout << "Masukkan Nama Lengkap : ";
+
+        getline(cin, userData.namalengkap);
+    }
     userData.namalengkap = hill_cipher_encrypt(userData.namalengkap);
+
     cout << "Tanggal Lahir (dd/mm/yyyy) : ";
-    cin >> userData.tanggallahir;
+    getline(cin, userData.tanggallahir);
+    while(userData.tanggallahir.find('|') != string::npos) {
+        system("cls");
+        cout << "Pastikan tidak menggunakan simbol '|'. Silahkan masukkan lagi.\n";
+        cout << "Masukkan Tanggal Lahir : ";
+        getline(cin, userData.tanggallahir);
+    }
     userData.tanggallahir = hill_cipher_encrypt(userData.tanggallahir);
+
     cout << "Alamat Rumah : ";
-    cin.ignore();
     getline(cin, userData.alamat);
+    while(userData.alamat.find('|') != string::npos) {
+        system("cls");
+        cout << "Pastikan tidak menggunakan simbol '|'. Silahkan masukkan lagi.\n";
+        cout << "Masukkan Alamat Rumah : ";
+
+        getline(cin, userData.alamat);
+    }
     userData.alamat = hill_cipher_encrypt(userData.alamat);
+
     cout << "Masukkan Password : ";
     getline(cin, userData.password);
+    while(userData.password.find('|') != string::npos || userData.password.find(' ') != string::npos) {
+        system("cls");
+        cout << "Password tidak valid. Pastikan tidak menggunakan spasi atau simbol '|'. Silahkan masukkan lagi.\n";
+        cout << "Masukkan Password : ";
+        getline(cin, userData.password);
+    }
     userData.password = hill_cipher_encrypt(userData.password);
 
     cout << "Membuat Clue Keamanan\n";
     cout << "Note : Clue keamanan ini akan digunakan jika anda lupa password pada suatu saat. Isi dengan yang mudah diingat oleh anda!\n\n";
     cout << "Masukkan Clue Keamanan Anda : ";
-    cin.ignore();
     getline(cin, userData.clueKeamanan);
+    while(userData.clueKeamanan.find('|') != string::npos) {
+        system("cls");
+        cout << "Pastikan tidak menggunakan simbol '|'. Silahkan masukkan lagi.\n";
+        cout << "Masukkan Clue Keamanan : ";
+        getline(cin, userData.clueKeamanan);
+    }
     userData.clueKeamanan = hill_cipher_encrypt(userData.clueKeamanan);
     
-    // Simpan data pengguna yang telah dienkripsi ke dalam file
-    simpanDataPasien(userData);
+    if (simpanDataPasien(userData)) {
+        cout << "Data Berhasil Disimpan.\n\n";
+        return true;
+    } else {
+        cout << "Gagal menyimpan data.\n";
+        return false;
+    }
 }
 
 

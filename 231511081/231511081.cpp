@@ -21,6 +21,36 @@ bool insertAkhir(int nilai, pAddr& awal, pAddr& akhir) {
     }
 }
 
+// Fungsi untuk mencari indeks karakter pada tabel konversi
+int cariIndeks(tAddr head, char karakter) {
+    int indeks = 1;
+    tAddr current = head;
+    while (current != nullptr) {
+        if (current->info == karakter) {
+            return indeks;
+        }
+        current = current->next;
+        indeks++;
+    }
+    return -1; // Karakter tidak ditemukan dalam tabel konversi
+}
+// Fungsi untuk mengkonversi plainteks menjadi linked list angka sesuai urutan pada tabel konversi
+pAddr konversiPlainteksKeAngka(const string& plainteks, tAddr awal) {
+    pAddr angkaAwal = nullptr;
+    pAddr angkaAkhir = nullptr;
+
+    for (char karakter : plainteks) {
+        int indeks = cariIndeks(awal, karakter);
+        if (indeks != -1) {
+            insertAkhir(indeks, angkaAwal, angkaAkhir);
+        } else {
+            cout << "Karakter '" << karakter << "' tidak ada di dalam tabel konversi." << endl;
+        }
+    }
+
+    return angkaAwal;
+}
+
 bool buatSuratHasilPemeriksaan()
 {
     string nomorPendaftaran, nik, namalengkap, tanggallahir, tanggalperiksa, pilihandokter;

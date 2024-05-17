@@ -129,3 +129,36 @@ void tampilkanDataPeriksa() {
         cout << "Gagal membuka file daftarperiksa.txt.\n";
     }
 }
+
+// fungsi untuk membuat node untuk linked list key
+kAddr createNodeKey(int nilai) {
+    kAddr newNode = new NodeK;
+    if (newNode != nullptr) {
+        newNode->info = nilai;
+        newNode->nextrow = nullptr;
+        newNode->nextcol = nullptr;
+    } else {
+        cout << "Alokasi memori gagal. Tidak dapat membuat node baru." << endl;
+    }
+    return newNode;
+}
+
+// fungsi untuk membuat linked list menjadi seperti matriks 2x2
+kAddr buatLinkedListKey(int Key11, int Key12, int Key21, int Key22) {
+
+    //membuat linked list yang merepresentasikan array 2 dimensi Key[2][2]
+    kAddr key11 = createNodeKey(Key11);
+    kAddr key12 = createNodeKey(Key12);
+    kAddr key21 = createNodeKey(Key21);
+    kAddr key22 = createNodeKey(Key22);
+
+    //menghubungkan node secara horizontal
+    key11->nextrow = key12;
+    key21->nextrow = key22;
+
+    //menghubungkan node secara vertikal
+    key11->nextcol = key21;
+    key12->nextcol = key22;
+
+    return key11;
+}

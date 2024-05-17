@@ -1,14 +1,37 @@
 #include "231511081.h"
 #include "../231511067/231511067.h"
 #include "../231511082/231511082.h"
+// modul insertakhir, modul konversi string menjadi angka dalam bentuk linked list 
+// Fungsi untuk menyisipkan node baru di akhir linked list plainteks/cipherteks
+bool insertAkhir(int nilai, pAddr& awal, pAddr& akhir) {
+    pAddr p = new NodeP;
+    if (p != nullptr) {
+        p->info = nilai;
+        p->next = nullptr;
+        if (awal == nullptr && akhir == nullptr) {
+            awal = p;
+        } else {
+            akhir->next = p;
+        }
+        akhir = p;
+        return true; 
+    } else {
+        cout << "Alokasi memori gagal. Tidak dapat menyisipkan node baru." << endl;
+        return false;
+    }
+}
 
-
-
-void buatSuratHasilPemeriksaan() {
-
+bool buatSuratHasilPemeriksaan()
+{
     string nomorPendaftaran, nik, namalengkap, tanggallahir, tanggalperiksa, pilihandokter;
     cout << "Masukkan Nomor Pendaftaran Pasien : ";
     cin >> nomorPendaftaran;
+    while(nomorPendaftaran.find('|') != string::npos) {
+        system("cls");
+        cout << "Pastikan tidak menggunakan simbol '|'. Silahkan masukkan lagi.\n";
+        cout << "Masukkan nomor pendaftaran : ";
+        cin >> nomorPendaftaran;
+    }
     nomorPendaftaran = hill_cipher_encrypt(nomorPendaftaran);
     
     ifstream inFile("file/daftarperiksa.txt");
@@ -25,8 +48,8 @@ void buatSuratHasilPemeriksaan() {
             getline(ss, pendaftaran.tanggalperiksa, '|');
             getline(ss, pendaftaran.pilihandokter, '|');
 
-           
-            if (pendaftaran.nomorPendaftaran == nomorPendaftaran) {
+            if (pendaftaran.nomorPendaftaran == nomorPendaftaran)
+            {
                 pendaftaranDitemukan = true;
                 nik = pendaftaran.nik;
                 namalengkap = pendaftaran.namalengkap;
@@ -38,36 +61,51 @@ void buatSuratHasilPemeriksaan() {
         }
         inFile.close();
 
-        if (pendaftaranDitemukan) {
-            
+        if (pendaftaranDitemukan) 
+        {
             string hasilPemeriksaan;
             cout << "Masukkan hasil pemeriksaan: ";
             cin.ignore();
             getline(cin, hasilPemeriksaan);
+            while(hasilPemeriksaan.find('|') != string::npos) {
+                system("cls");
+                cout << "Pastikan tidak menggunakan simbol '|'. Silahkan masukkan lagi.\n";
+                cout << "Masukkan Hasil pemeriksaan : ";
+                getline(cin, hasilPemeriksaan);
+            }
             hasilPemeriksaan = hill_cipher_encrypt(hasilPemeriksaan);
 
             // Mengisi resep obat
             string resepObat;
             cout << "Masukkan resep obat: ";
             getline(cin, resepObat);
+            while(resepObat.find('|') != string::npos) {
+                system("cls");
+                cout << "Pastikan tidak menggunakan simbol '|'. Silahkan masukkan lagi.\n";
+                cout << "Masukkan Resep obat : ";
+                getline(cin, resepObat);
+            }
             resepObat = hill_cipher_encrypt(resepObat);
-
-            
-            ofstream outFile("file/hasilperiksa.txt", ios::app); 
-            if (outFile.is_open()) {
+            ofstream outFile("file/hasilperiksa.txt", ios::app);
+            if (outFile.is_open()) 
+            {
                 outFile << pendaftaran.nomorPendaftaran << "|" << pendaftaran.nik << "|" << pendaftaran.namalengkap << "|"
                         << pendaftaran.tanggallahir << "|" << pendaftaran.tanggalperiksa << "|" << pendaftaran.pilihandokter << "|"
                         << hasilPemeriksaan << "|" << resepObat << endl;
                 outFile.close();
                 cout << "Surat hasil pemeriksaan berhasil dibuat.\n";
+                return true;
             } else {
                 cout << "Gagal menyimpan surat hasil pemeriksaan.\n";
+                return false;
             }
         } else {
             cout << "Nomor pendaftaran tidak ditemukan.\n";
+            return false;
         }
     } else {
         cout << "Gagal membuka file daftarperiksa.txt.\n";
+        return false;
     }
 }
 

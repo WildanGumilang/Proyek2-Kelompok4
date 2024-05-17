@@ -26,7 +26,7 @@ struct AdminData {
     string nomorAdmin;
 };
 
-// Deklarasi fungsi-fungsi modul
+
 void simpanDataPasien(const UserData& userData);
 void lupaPassword();
 void registrasi();
@@ -34,5 +34,6 @@ bool login(string& nik, string& namalengkap, string& tanggallahir, string& alama
 bool loginAdmin(string& namaAdmin);
 int countDeterminan(kAddr awal);
 kAddr inversKey(kAddr awal, int determinan);
+pAddr perkalianMatriksLL(pAddr pAwal, kAddr kAwal);
 
 #endif

@@ -331,3 +331,28 @@ kAddr inversKey(kAddr awal, int determinan) {
     }
     return awal;
 }
+
+// fungsi untuk perkalian matriksLL kunci dengan matriksLL plainteks/cipherteks 
+pAddr perkalianMatriksLL(pAddr pAwal, kAddr kAwal) { 
+    pAddr currentP = pAwal;
+
+    while (currentP != nullptr && currentP->next != nullptr) {
+        kAddr currentK = kAwal;
+
+        int node1 = currentP->info;
+        int node2 = currentP->next->info;
+
+
+        int hasil1 = (((node1 * currentK->info) + (node2 * currentK->nextrow->info)) % 94);
+
+        currentK = currentK->nextcol;
+        int hasil2 = (((node1 * currentK->info) + (node2 * currentK->nextrow->info)) % 94);
+
+
+        currentP->info = hasil1;
+        currentP->next->info = hasil2;
+
+        currentP = currentP->next->next;
+    }
+    return pAwal;
+}

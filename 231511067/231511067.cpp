@@ -135,22 +135,27 @@ void tampilkanDataPasienByNIK(string& nik) {
     }
 }
 
-// Fungsi untuk menghapus node pertama dari linked list plainteks/cipherteks
-bool deleteAwal(pAddr& awal, pAddr& akhir) {
-    if (awal != nullptr && akhir != nullptr) {
-        pAddr temp = awal;
-        awal = awal->next;
+/// Fungsi untuk menghapus semua node dalam linked list
+bool hapusLinkedList(pAddr& awalP) {
+    while (awalP != nullptr) {
+        pAddr temp = awalP;
+        awalP = awalP->next;
         delete temp;
-        return true;
-    } else if (awal == akhir) {
-        delete awal;
-        awal = nullptr;
-        akhir = nullptr;
-        return true; 
-    } else {
-        cout << "Linked list sudah kosong. Tidak ada yang bisa dihapus." << endl;
-        return false;
     }
+    return awalP == nullptr;
+}
+
+bool hapusLinkedListKey(kAddr& awalK) {
+    while (awalK != nullptr) {
+        kAddr tempRow = awalK;
+        while (tempRow != nullptr) {
+            kAddr temp = tempRow;
+            tempRow = tempRow->nextcol;
+            delete temp;
+        }
+        awalK = awalK->nextrow;
+    }
+    return awalK == nullptr;
 }
 
 // Fungsi untuk mencari karakter pada tabel konversi berdasarkan indeks
@@ -185,3 +190,4 @@ string konversiAngkaKePlainteks(const pAddr awal, const tAddr tabelKonversi) {
     }
     return hasilkonversi;
 }
+

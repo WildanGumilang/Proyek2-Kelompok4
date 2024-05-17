@@ -28,7 +28,8 @@ struct NodeK {
 
 string hill_cipher_encrypt(const string& plaintext);
 void tampilkanDataPasienByNIK(std::string& nik);
-bool deleteAwal(pAddr& awal, pAddr& akhir);
+bool hapusLinkedList(pAddr& awalP);
+bool hapusLinkedListKey(kAddr& awalK);
 char cariKarakter(const tAddr awal, int indeks);
 string konversiAngkaKePlainteks(const pAddr awal, const tAddr tabelKonversi);
 

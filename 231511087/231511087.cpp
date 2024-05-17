@@ -1,6 +1,4 @@
 #include "231511087.h"
-#include "../231511067/231511067.h"
-#include "../231511082/231511082.h"
 
 void simpanDataPasien(const UserData& userData) {
     ofstream outFile("file/akun_pengguna.txt", ios::app);
@@ -277,4 +275,59 @@ bool loginAdmin(string& namaAdmin) {
         cout << "Gagal mengakses penyimpanan data.\n";
         return false;
     }
+}
+
+// Fungsi untuk menghitung determinan matriks 2x2 dari linked list
+int countDeterminan(kAddr awal) {
+    if (awal == nullptr || awal->nextrow == nullptr || awal->nextcol == nullptr || awal->nextrow->nextcol == nullptr) {
+        cout << "Error: Linked list tidak lengkap." << endl;
+        return 0;
+    }
+    int det = (awal->info * awal->nextrow->nextcol->info) - (awal->nextrow->info * awal->nextcol->info);
+    return det;
+}
+kAddr inversKey(kAddr awal, int determinan) {
+    if (determinan == 0) {
+        cout << "Error: Determinan nol, tidak dapat menghitung invers determinan." << endl;
+        return nullptr; // Kembalikan nullptr karena determinan nol
+    }
+
+    // Cari invers determinan menggunakan algoritma modulo multiplicative inverse
+    int inverseDeterminan = 0;
+    for (int i = 1; i < 94; ++i) {
+        if ((determinan * i) % 94 == 1) {
+            inverseDeterminan = i;
+            break;
+        }
+    }
+
+    // Perbarui nilai-nilai matriks sesuai dengan rumus invers matriks
+    int a = awal->info;
+    int b = awal->nextrow->info;
+    int c = awal->nextcol->info;
+    int d = awal->nextrow->nextcol->info;
+
+    awal->info = d;
+    awal->nextrow->info = -b;
+    awal->nextcol->info = -c;
+    awal->nextrow->nextcol->info = a;
+
+    // Kalikan nilai-nilai dengan invers determinan dan ambil modulo 94
+    kAddr current = awal;
+    while (current != nullptr) {
+        current->info = ((current->info * inverseDeterminan) % 94); //Dalam operasi modulus, jika hasil perkalian adalah negatif, maka hasil modulus juga akan negatif.
+        if (current->info < 0) {
+            current->info += 94; // Pastikan hasil modulus selalu positif
+        }
+        current = current->nextrow;
+    }
+    current = awal->nextcol;
+    while (current != nullptr) {
+        current->info = ((current->info * inverseDeterminan) % 94); //Dalam operasi modulus, jika hasil perkalian adalah negatif, maka hasil modulus juga akan negatif.
+        if (current->info < 0) {
+            current->info += 94; // Pastikan hasil modulus selalu positif
+        }
+        current = current->nextrow;
+    }
+    return awal;
 }

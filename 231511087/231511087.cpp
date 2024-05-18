@@ -259,7 +259,6 @@ bool login(string& nik, string& namalengkap, string& tanggallahir, string& alama
 
 
 //Fungsi Login Admin
-
 bool loginAdmin(string& namaAdmin) {
     string nomorAdmin, password; 
     bool cek = false;
@@ -337,7 +336,7 @@ int countDeterminan(kAddr awal) {
 kAddr inversKey(kAddr awal, int determinan) {
     if (determinan == 0) {
         cout << "Error: Determinan nol, tidak dapat menghitung invers determinan." << endl;
-        return nullptr; // Kembalikan nullptr karena determinan nol
+        return nullptr;
     }
 
     // Cari invers determinan menggunakan algoritma modulo multiplicative inverse

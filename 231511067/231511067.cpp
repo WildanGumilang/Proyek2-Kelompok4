@@ -7,6 +7,7 @@
 
 using namespace std;
 
+
 // ini array untuk mengonversi indeks ke karakter
 char mod[94] = {
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
@@ -51,10 +52,13 @@ string enkripsi(const string& plaintext) {
         {3, 4}
     };
 
-    // Mengonversi panjang plaintext menjadi panjang yang genap dengan menambahkan 'X' jika perlu
+    int len = plaintext.length();
     string padded_plaintext = plaintext;
-        if (plaintext.size() % 2 != 0) {
+
+    // Tambahkan satu karakter 'X' pada akhir plaintext jika panjang plaintext ganjil
+    if (len % 2 != 0) {
         padded_plaintext += 'X';
+        len++; // Update panjang
     }
 
     string encrypted_text = "";
@@ -62,10 +66,10 @@ string enkripsi(const string& plaintext) {
     for (int i = 0; i < len; i += 2) {
         int x1 = -1, x2 = -1;
         for (int j = 0; j < 94; ++j) {
-            if (mod[j] == plaintext[i]) {
+            if (mod[j] == padded_plaintext[i]) {
                 x1 = j;
             }
-            if (mod[j] == plaintext[i + 1]) {
+            if (mod[j] == padded_plaintext[i + 1]) {
                 x2 = j;
             }
         }
@@ -75,8 +79,8 @@ string enkripsi(const string& plaintext) {
             return "";
         }
 
-        int y1 = (key[0][0] * x1 + key[0][1] * x2) % 94;
-        int y2 = (key[1][0] * x1 + key[1][1] * x2) % 94;
+        int y1 = ((key[0][0] * x1) + (key[0][1] * x2) % 94);
+        int y2 = ((key[1][0] * x1) + (key[1][1] * x2) % 94);
 
         encrypted_text += mod[y1];
         encrypted_text += mod[y2];

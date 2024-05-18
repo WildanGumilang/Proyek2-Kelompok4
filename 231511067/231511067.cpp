@@ -1,5 +1,4 @@
 #include "231511067.h"
-#include "../231511082/231511082.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -7,16 +6,6 @@
 #include <cstring>
 
 using namespace std;
-
-// Deklarasi struktur UserData
-struct UserData {
-    string nik;
-    string password;
-    string namalengkap;
-    string tanggallahir;
-    string alamat;
-    string clueKeamanan;
-};
 
 // ini array untuk mengonversi indeks ke karakter
 char mod[94] = {
@@ -26,8 +15,30 @@ char mod[94] = {
     '[', ']', '<', '>', '.', ',', ';', '"', '\'', '`', '\\', '/', '?', ':', '~', ' '
 };
 
+string hill_cipher_encrypt(string plainteks) {
 
-string hill_cipher_encrypt(const string& plaintext) {
+    tAddr awalT = bacaTabelKonversi();
+    kAddr awalK = buatLinkedListKey(2, 1, 3, 4);
+    pAddr awalP = nullptr;
+    bool genap;
+    plainteks = chekNumChar(plainteks, genap);
+    // cout << "pLAINTEKS setelah dicek genap/ ganjil = " << plainteks << endl;
+    awalP = konversiPlainteksKeAngka(plainteks, awalT);
+    // cout << "pLAINTEKS setelah dijadikan angka dan dijadikan linked list = ";
+    // tampilkanLinkedList(awalP);
+    awalP = perkalianMatriksLL(awalP, awalK);
+    // cout << "aNGKA setelah dikalikan matriks linked list = " << endl;
+    // tampilkanLinkedList(awalP);
+    plainteks = konversiAngkaKePlainteks(awalP, awalT);
+    plainteks = addAngka(plainteks, genap);
+    // cout << "pLAINTEKS setelah dikonversi didalam function = " << plainteks << endl;
+
+    if(hapusLinkedList(awalP) && hapusLinkedListKey(awalK) && hapusLinkedListTabel(awalT)) {
+        return plainteks;
+    }
+}
+
+string enkripsi(const string& plaintext) {
     char mod[94] = {
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
@@ -135,6 +146,15 @@ void tampilkanDataPasienByNIK(string& nik) {
     }
 }
 
+// Fungsi untuk menghapus semua node dalam linked list
+bool hapusLinkedListTabel(tAddr& awalT) {
+    while (awalT != nullptr) {
+        tAddr temp = awalT;
+        awalT = awalT->next;
+        delete temp;
+    }
+    return awalT == nullptr;
+}
 /// Fungsi untuk menghapus semua node dalam linked list
 bool hapusLinkedList(pAddr& awalP) {
     while (awalP != nullptr) {
@@ -161,7 +181,7 @@ bool hapusLinkedListKey(kAddr& awalK) {
 // Fungsi untuk mencari karakter pada tabel konversi berdasarkan indeks
 char cariKarakter(const tAddr awal, int indeks) {
     tAddr current = awal;
-    int currentIdx = 1; // Indeks dimulai dari 1
+    int currentIdx = 0; // Indeks dimulai dari 1
 
     while (current != nullptr && currentIdx != indeks) {
         current = current->next;
@@ -185,6 +205,7 @@ string konversiAngkaKePlainteks(const pAddr awal, const tAddr tabelKonversi) {
             hasilkonversi += karakter;
         } else {
             cout << "Indeks " << indeks << " tidak ada di dalam tabel konversi." << endl;
+            cout << "'" << current->info << "'" << endl;
         }
         current = current->next;
     }

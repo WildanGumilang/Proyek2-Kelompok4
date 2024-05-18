@@ -2,35 +2,22 @@
 #define HILL_CIPHER_H
 
 #include <string>
+#include "../program.h"
+#include "../231511082/231511082.h"
+#include "../231511087/231511087.h"
+#include "../231511080/231511080.h"
+#include "../231511081/231511081.h"
 
 using namespace std;
 
-typedef struct NodeT *tAddr;
-typedef struct NodeP *pAddr;
-typedef struct NodeK *kAddr;
-// Struct Node untuk linked list tabel konversi
-struct NodeT {
-    char info;
-    tAddr next;
-};
-
-// Struct Node untuk linked list angka hasil konversi
-struct NodeP {
-    int info;
-    pAddr next;
-};
-
-struct NodeK {
-    int info;
-    kAddr nextrow;
-    kAddr nextcol;
-};
-
-string hill_cipher_encrypt(const string& plaintext);
-void tampilkanDataPasienByNIK(std::string& nik);
+string hill_cipher_encrypt(string plainteks);
+bool hapusLinkedListTabel(tAddr& awalT);
 bool hapusLinkedList(pAddr& awalP);
 bool hapusLinkedListKey(kAddr& awalK);
 char cariKarakter(const tAddr awal, int indeks);
 string konversiAngkaKePlainteks(const pAddr awal, const tAddr tabelKonversi);
+string enkripsi(const string& plaintext);
+void tampilkanDataPasienByNIK(std::string& nik);
+
 
 #endif

@@ -6,26 +6,11 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include "../program.h"
 #include "../231511067/231511067.h"
 #include "../231511082/231511082.h"
 
 using namespace std;
-
-struct UserData {
-    string nik;
-    string password;
-    string namalengkap;
-    string tanggallahir;
-    string alamat;
-    string clueKeamanan;
-};
-
-struct AdminData {
-    string namaAdmin;
-    string password;
-    string nomorAdmin;
-};
-
 
 bool simpanDataPasien(const UserData& userData);
 bool lupaPassword();

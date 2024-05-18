@@ -45,19 +45,16 @@ string enkripsi(const string& plaintext) {
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '-', '+', '=', '{', '}', 
         '[', ']', '<', '>', '.', ',', ';', '"', '\'', '`', '\\', '/', '?', ':', '~', ' '
     };
-    
+
     int key[2][2] = {
         {2, 1},
         {3, 4}
     };
 
-    // Menghitung panjang plaintext
-    int len = plaintext.length();
-
-    // Jika panjang plaintext ganjil, tambahkan satu karakter 'X'
-    if (len % 2 != 0) {
-        plaintext += 'X';
-        len++;
+    // Mengonversi panjang plaintext menjadi panjang yang genap dengan menambahkan 'X' jika perlu
+    string padded_plaintext = plaintext;
+        if (plaintext.size() % 2 != 0) {
+        padded_plaintext += 'X';
     }
 
     string encrypted_text = "";
@@ -86,7 +83,6 @@ string enkripsi(const string& plaintext) {
     }
     return encrypted_text;
 }
-
 
 void tampilkanDataPasienByNIK(string& nik) {
 

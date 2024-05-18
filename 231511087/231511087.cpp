@@ -118,7 +118,7 @@ bool registrasi() {
                 system("cls");
                 cout << "NIK yang anda masukkan sudah terdaftar. Registrasi tidak dapat dilakukan lagi.\n SIlahkan lakukan Login.\n\n";
                 inFile.close();
-                return; 
+                return false; 
             }
         }
         inFile.close();
@@ -333,6 +333,7 @@ int countDeterminan(kAddr awal) {
     int det = (awal->info * awal->nextrow->nextcol->info) - (awal->nextrow->info * awal->nextcol->info);
     return det;
 }
+
 kAddr inversKey(kAddr awal, int determinan) {
     if (determinan == 0) {
         cout << "Error: Determinan nol, tidak dapat menghitung invers determinan." << endl;
@@ -348,7 +349,6 @@ kAddr inversKey(kAddr awal, int determinan) {
         }
     }
 
-    // Perbarui nilai-nilai matriks sesuai dengan rumus invers matriks
     int a = awal->info;
     int b = awal->nextrow->info;
     int c = awal->nextcol->info;
@@ -359,12 +359,11 @@ kAddr inversKey(kAddr awal, int determinan) {
     awal->nextcol->info = -c;
     awal->nextrow->nextcol->info = a;
 
-    // Kalikan nilai-nilai dengan invers determinan dan ambil modulo 94
     kAddr current = awal;
     while (current != nullptr) {
         current->info = ((current->info * inverseDeterminan) % 94); //Dalam operasi modulus, jika hasil perkalian adalah negatif, maka hasil modulus juga akan negatif.
         if (current->info < 0) {
-            current->info += 94; // Pastikan hasil modulus selalu positif
+            current->info += 94; // memastikan hasil modulus selalu positif
         }
         current = current->nextrow;
     }
@@ -372,7 +371,7 @@ kAddr inversKey(kAddr awal, int determinan) {
     while (current != nullptr) {
         current->info = ((current->info * inverseDeterminan) % 94); //Dalam operasi modulus, jika hasil perkalian adalah negatif, maka hasil modulus juga akan negatif.
         if (current->info < 0) {
-            current->info += 94; // Pastikan hasil modulus selalu positif
+            current->info += 94; // memastikan hasil modulus selalu positif
         }
         current = current->nextrow;
     }

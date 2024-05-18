@@ -12,13 +12,13 @@
 
 using namespace std;
 
+int countDeterminan(kAddr awal);
+kAddr inversKey(kAddr awal, int determinan);
+pAddr perkalianMatriksLL(pAddr pAwal, kAddr kAwal);
 bool simpanDataPasien(const UserData& userData);
 bool lupaPassword();
 bool registrasi();
 bool login(string& nik, string& namalengkap, string& tanggallahir, string& alamat, string& password);
 bool loginAdmin(string& namaAdmin);
-int countDeterminan(kAddr awal);
-kAddr inversKey(kAddr awal, int determinan);
-pAddr perkalianMatriksLL(pAddr pAwal, kAddr kAwal);
 
 #endif

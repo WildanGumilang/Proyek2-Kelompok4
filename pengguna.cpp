@@ -37,7 +37,11 @@ int main() {
                 case 1:
                     // HALAMAN REGISTRASI
                     system("cls");
-                    registrasi();
+                    if (registrasi()) {
+                        cout << " --------------------------------- Registrasi Berhasil! --------------------------------------------- \n\n";
+                    } else {
+                        cout << "Gagal Registrasi.\n";
+                    }
                     break;
                 case 2:
                     // HALAMAN LOGIN
@@ -47,7 +51,11 @@ int main() {
                 case 3:
                     // HALAMAN LOGIN
                     system("cls");
-                    lupaPassword();
+                    if (lupaPassword()) {
+                        cout << " ------------------------------ Password Berhasil Diganti! ----------------------------------------- \n\n";
+                    } else {
+                        cout << "Gagal mengubah password.\n";
+                    }
                     break;
                 case 4:
                     system("cls");
@@ -84,7 +92,11 @@ int main() {
                 case 2:
                     system("cls");
                     // HALAMAN PENDAFTARAN
-                    pendaftaranPeriksa(nik, namalengkap, tanggallahir);
+                    if (pendaftaranPeriksa(nik, namalengkap, tanggallahir)) {
+                        cout << " ------------------------------ Pendaftaran Berhasil Dilakukan! ----------------------------------------- \n\n";
+                    } else {
+                        cout << "Gagal melakukan pendaftaran.\n";
+                    }
                     break;
                 case 3:
                     system("cls");

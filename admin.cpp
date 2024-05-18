@@ -75,7 +75,11 @@ int main() {
                     cout << "Ingin Membuat Hasil Periksa Pasien? (y/n)";
                     cin >> jawaban;
                     if (jawaban == "y" || jawaban == "ya"){
-                        buatSuratHasilPemeriksaan();
+                        if (buatSuratHasilPemeriksaan()) {
+                        cout << " ------------------------------ Surat Hasil Pemeriksaan Berhasil Dibuat ! ----------------------------------------- \n\n";
+                        } else {
+                            cout << "Gagal membuat surat hasil pemeriksaan.\n";
+                        }
                     }
                     break;
                 case 3:

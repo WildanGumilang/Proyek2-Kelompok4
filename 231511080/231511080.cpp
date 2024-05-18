@@ -13,7 +13,7 @@ string generateNomorPendaftaran() {
 }
 
 // Fungsi untuk mengisi pendaftaran pemeriksaan
-void pendaftaranPeriksa(const string& nik, const string& namalengkap, const string& tanggallahir) {
+bool pendaftaranPeriksa(const string& nik, const string& namalengkap, const string& tanggallahir) {
     userDaftar pendaftaran;
 
     // Isi data pendaftaran
@@ -29,7 +29,13 @@ void pendaftaranPeriksa(const string& nik, const string& namalengkap, const stri
     // Input data tambahan
     cout << "Masukkan Tanggal Periksa (dd/mm/yyyy): ";
     cin >> pendaftaran.tanggalperiksa;
-
+    getline(cin, pendaftaran.tanggalperiksa);
+    while (pendaftaran.tanggalperiksa.find('|') != string::npos) {
+        cout << "Pastikan tidak menggunakan simbol '|'. Silahkan masukkan lagi.\n";
+        cout << "Masukkan Tanggal Periksa (dd/mm/yyyy): ";
+        getline(cin, pendaftaran.tanggalperiksa);
+    }
+    
     // Pilihan dokter
     cout << "Pilih dokter yang Anda inginkan:\n";
     cout << "1. Dr. Wildan Gumilang (Dokter Umum)\n";
@@ -43,7 +49,7 @@ void pendaftaranPeriksa(const string& nik, const string& namalengkap, const stri
             pendaftaran.pilihandokter = "Dr. Wildan Gumilang (Dokter Umum)";
             break;
         case 2:
-            pendaftaran.pilihandokter = "Dr. Daffa Tridya (Spesialis Melahirkan)";
+            pendaftaran.pilihandokter = "Dr. Daffa Tridya (Spesialis Jantung)";
             break;
         case 3:
             pendaftaran.pilihandokter = "Dr. Agra Anisa (Spesialis Anak)";
@@ -84,8 +90,10 @@ void pendaftaranPeriksa(const string& nik, const string& namalengkap, const stri
                 << pendaftaran.tanggalperiksa << "|" << pendaftaran.pilihandokter << "|" << pendaftaran.carabayar << endl;
         outFile.close();
         cout << "Pendaftaran berhasil disimpan.\n";
+        return true;
     } else {
         cout << "Gagal menyimpan data pendaftaran.\n";
+        return false;
     }
 }
 
@@ -95,11 +103,11 @@ void tampilkanDataPeriksa() {
 
     ifstream inFile("file/daftarperiksa.txt");
     if (inFile.is_open()) {
-        cout << "===================================================================================================" << endl;
+        cout << "==================================================================================================================" << endl;
         cout << "                                SELURUH DATA PENDAFTARAN PERIKSA                                     " << endl;
-        cout << "===================================================================================================" << endl;
-        cout << "No. Pendaftaran\tNIK\tNama Lengkap\tTanggal Lahir\tTanggal Periksa\tPilihan Dokter\tCara Bayar" << endl;
-        cout << "---------------------------------------------------------------------------------------------------" << endl;
+        cout << "==================================================================================================================" << endl;
+        cout << "No.Pendaftaran\tNIK\tNama Lengkap\tTanggal Lahir\tTanggal Periksa\tPilihan Dokter\tCara Bayar" << endl;
+        cout << "------------------------------------------------------------------------------------------------------------------" << endl;
 
         string line;
         while (getline(inFile, line)) {
@@ -161,4 +169,28 @@ kAddr buatLinkedListKey(int Key11, int Key12, int Key21, int Key22) {
     key12->nextcol = key22;
 
     return key11;
+}
+
+// fungsi untuk menghapus karakter 1 (berarti karakter string genap) atau 0 (berarti karakter string ganjil) diakhir string padasaat membaca dari file, chekjumlah true jika string genap, dan sebaliknya
+string chekAndDelLastBool(string str, bool& chekJumlah) {
+    int panjang = str.length();
+    if (panjang > 0) {
+        char akhir = str[panjang - 1];
+        if (akhir == '1') {
+            str.pop_back(); // Hapus karakter '1' dari akhir string
+            chekJumlah = true;
+        } else if (akhir == '0') {
+            str.pop_back(); // Hapus karakter '0' dari akhir string
+            chekJumlah = false;
+        }
+    }
+    return str; // Jika tidak ada '1' atau '0' di akhir string
+}
+
+// fungsi untuk menghapus karakter akhir pada string jika chekjumlah tadi bernilai false
+string deleteLastBool(string str, bool chekJumlah) {
+    if (!chekJumlah && !str.empty()) {
+        str.pop_back(); // Hapus karakter terakhir dari string
+    }
+    return str;
 }

@@ -98,7 +98,56 @@ string hill_cipher_decrypt(const string& encrypted_text) {
     delete[] decrypted_temp;
     return decrypted_text;
 }
+// Fungsi untuk membaca isi file tabel konversi
+tAddr bacaTabelKonversi() {
+    tAddr awal = nullptr;
+    tAddr akhir = nullptr;
 
+    ifstream inFile("tabel_konversi.txt");
+    if (inFile.is_open()) {
+        char karakter;
+        while (inFile.get(karakter)) {
+            if (karakter != '|' && karakter != '\n') {
+                tAddr newNode = new NodeT;
+                newNode->info = karakter;
+                newNode->next = nullptr;
+
+                if (awal == nullptr) {
+                    awal = akhir = newNode;
+                } else {
+                    akhir->next = newNode;
+                    akhir = newNode;
+                }
+            }
+        }
+        inFile.close();
+    } else {
+        cout << "Gagal membaca file tabel konversi." << endl;
+    }
+
+    return awal;
+}
+
+// fungsi untuk mengecek karakter dalam string genap atau ganjil, jika ganjil maka akan ditambah X, dan genap bernilai false
+string chekNumChar(string str, bool& genap) {
+    int panjang = str.length();
+    if (panjang % 2 == 0) {
+        genap = true;
+    } else {
+        genap = false;
+        str += 'X';
+    }
+    return str;
+}
+// fungsi untuk menambahkan karakter 1 (jika genap bernilai true) atau 0 (jika genap bernilai false) padasaat sebelum dimasukkan ke file
+string addAngka(string str, bool genap) {
+    if (genap) {
+        str += "1";
+    } else {
+        str += "0";
+    }
+    return str;
+}
 void tampilkanSeluruhDataPasien() {
 
     ifstream inFile("file/akun_pengguna.txt");

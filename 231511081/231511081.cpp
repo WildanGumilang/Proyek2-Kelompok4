@@ -1,5 +1,6 @@
 #include "231511081.h"
-
+#include "../231511067/231511067.h"
+#include "../231511082/231511082.h"
 
 // Fungsi untuk menyisipkan node baru di akhir linked list plainteks/cipherteks
 bool insertAkhir(int nilai, pAddr& awal, pAddr& akhir) {

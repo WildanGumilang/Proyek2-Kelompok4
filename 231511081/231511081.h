@@ -6,29 +6,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-using namespace std;
-
-struct userDaftar {
-    string nomorPendaftaran;
-    string nik;
-    string namalengkap;
-    string tanggallahir;
-    string tanggalperiksa;
-    string pilihandokter;
-    string carabayar;
-};
-
-
-struct UserHasil {
-    string nomorpendaftaran;
-    string nik;
-    string namalengkap;
-    string tanggallahir;
-    string tanggalperiksa;
-    string pilihandokter;
-    string hasilPemeriksaan;
-    string resepObat;
-};
+#include "../program.h"
+#include "../231511067/231511067.h"
+#include "../231511082/231511082.h"
 
 bool insertAkhir(int nilai, pAddr& awal, pAddr& akhir);
 void tampilkanSuratHasilPemeriksaan(string& targetNik);

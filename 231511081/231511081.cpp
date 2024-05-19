@@ -1,7 +1,6 @@
 #include "231511081.h"
-#include "../231511067/231511067.h"
-#include "../231511082/231511082.h"
-// modul insertakhir, modul konversi string menjadi angka dalam bentuk linked list 
+
+
 // Fungsi untuk menyisipkan node baru di akhir linked list plainteks/cipherteks
 bool insertAkhir(int nilai, pAddr& awal, pAddr& akhir) {
     pAddr p = new NodeP;
@@ -23,7 +22,7 @@ bool insertAkhir(int nilai, pAddr& awal, pAddr& akhir) {
 
 // Fungsi untuk mencari indeks karakter pada tabel konversi
 int cariIndeks(tAddr head, char karakter) {
-    int indeks = 1;
+    int indeks = 0;
     tAddr current = head;
     while (current != nullptr) {
         if (current->info == karakter) {
@@ -147,11 +146,11 @@ void tampilkanSuratHasilPemeriksaan(string& targetNik) {
     targetNik = hill_cipher_encrypt(targetNik);
     ifstream inFile("file/hasilperiksa.txt");
     if (inFile.is_open()) {
-        cout << "==================================================================================================================" << endl;
+        cout << "================================================================================================================================" << endl;
         cout << "                                    SURAT HASIL PEMERIKSAAN PASIEN                                                   " << endl;
-        cout << "==================================================================================================================" << endl;
-        cout << "Nomor Pendaftaran\tNIK\tNama Lengkap\tTanggal Lahir\tTanggal Periksa\tPilihan Dokter\tHasil Pemeriksaan\tResep Obat" << endl;
-        cout << "------------------------------------------------------------------------------------------------------------------" << endl;
+        cout << "================================================================================================================================" << endl;
+        cout << "No.Pendaftaran\t\tNIK\t\tNama Lengkap\t\tTanggal Lahir\tTanggal Periksa\t\tPilihan Dokter\t\tHasil Pemeriksaan\tResep Obat" << endl;
+        cout << "-------------------------------------------------------------------------------------------------------------------------" << endl;
 
         string line;
         bool found = false;
@@ -186,7 +185,7 @@ void tampilkanSuratHasilPemeriksaan(string& targetNik) {
             cout << "Tidak ditemukan surat hasil pemeriksaan untuk NIK " << targetNik << endl;
         }
         
-        cout << "==================================================================================================================" << endl;
+        cout << "===============================================================================================================================" << endl;
         inFile.close();
     } else {
         cout << "Gagal membuka file hasilpemeriksaan.txt.\n";

@@ -262,12 +262,6 @@ bool login(string& nik, string& namalengkap, string& tanggallahir, string& alama
 bool loginAdmin(string& namaAdmin) {
     string nomorAdmin, password; 
     bool cek = false;
-    int key[2][2] = {
-        {31, 59},
-        {17, 92}
-    };
-    char decrypted_text[100];
-    char encrypted_text[100];
 
     cout << " ======================================= Halaman Login Admin ======================================== \n";
     cout << " ----------------------------------- Masukkan Nomor Admin dan Password -------------------------------- \n\n";
@@ -339,7 +333,7 @@ kAddr inversKey(kAddr awal, int determinan) {
         return nullptr;
     }
 
-    // Cari invers determinan menggunakan algoritma modulo multiplicative inverse
+    // Cari invers determinan
     int inverseDeterminan = 0;
     for (int i = 1; i < 94; ++i) {
         if ((determinan * i) % 94 == 1) {

@@ -2,15 +2,6 @@
 
 using namespace std;
 
-struct UserData {
-    string nik;
-    string password;
-    string namalengkap;
-    string tanggallahir;
-    string alamat;
-    string clueKeamanan;
-};
-
 const char mod[94] = {
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
@@ -28,7 +19,33 @@ int mod_inverse(int a, int m) {
     return -1; // Modular inverse does not exist
 }
 
-string hill_cipher_decrypt(const string& encrypted_text) {
+string hill_cipher_decrypt(string cipherteks) {
+    tAddr awalT = bacaTabelKonversi();
+    kAddr awalK = buatLinkedListKey(2, 1, 3, 4);
+    int det = countDeterminan(awalK);
+    awalK = inversKey(awalK, det);
+
+    pAddr awalP = nullptr;
+    bool genap;
+    cipherteks = chekAndDelLastBool(cipherteks, genap);
+    // cout << "pLAINTEKS setelah dihapus 0 atau 1 = " << cipherteks << endl;  
+    awalP = konversiPlainteksKeAngka(cipherteks, awalT);
+    // cout << "pLAINTEKS setelah dijadikan angka dan dijadikan linked list = ";
+    awalP = perkalianMatriksLL(awalP, awalK);
+    // cout << "aNGKA setelah dikalikan matriks linked list = " << endl;
+    // tampilkanLinkedList(awalP);
+    cipherteks = konversiAngkaKePlainteks(awalP, awalT);
+    // cout << "pLAINTEKS setelah dijadikan string = " << cipherteks << endl;
+    cipherteks = deleteLastBool(cipherteks, genap);
+    // cout << "pLAINTEKS setelah dicek 0 1 = " << cipherteks << endl;
+    // cout << "pLAINTEKS setelah dikonversi didalam function = " << cipherteks << endl;
+
+    if(hapusLinkedList(awalP) && hapusLinkedListKey(awalK) && hapusLinkedListTabel(awalT)) {
+        return cipherteks;
+    }
+}
+
+string dekripsi(const string& encrypted_text) {
     char mod[94] = {
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
@@ -98,56 +115,7 @@ string hill_cipher_decrypt(const string& encrypted_text) {
     delete[] decrypted_temp;
     return decrypted_text;
 }
-// Fungsi untuk membaca isi file tabel konversi
-tAddr bacaTabelKonversi() {
-    tAddr awal = nullptr;
-    tAddr akhir = nullptr;
 
-    ifstream inFile("tabel_konversi.txt");
-    if (inFile.is_open()) {
-        char karakter;
-        while (inFile.get(karakter)) {
-            if (karakter != '|' && karakter != '\n') {
-                tAddr newNode = new NodeT;
-                newNode->info = karakter;
-                newNode->next = nullptr;
-
-                if (awal == nullptr) {
-                    awal = akhir = newNode;
-                } else {
-                    akhir->next = newNode;
-                    akhir = newNode;
-                }
-            }
-        }
-        inFile.close();
-    } else {
-        cout << "Gagal membaca file tabel konversi." << endl;
-    }
-
-    return awal;
-}
-
-// fungsi untuk mengecek karakter dalam string genap atau ganjil, jika ganjil maka akan ditambah X, dan genap bernilai false
-string chekNumChar(string str, bool& genap) {
-    int panjang = str.length();
-    if (panjang % 2 == 0) {
-        genap = true;
-    } else {
-        genap = false;
-        str += 'X';
-    }
-    return str;
-}
-// fungsi untuk menambahkan karakter 1 (jika genap bernilai true) atau 0 (jika genap bernilai false) padasaat sebelum dimasukkan ke file
-string addAngka(string str, bool genap) {
-    if (genap) {
-        str += "1";
-    } else {
-        str += "0";
-    }
-    return str;
-}
 void tampilkanSeluruhDataPasien() {
 
     ifstream inFile("file/akun_pengguna.txt");
@@ -188,4 +156,54 @@ void tampilkanSeluruhDataPasien() {
     } else {
         cout << "Gagal mengakses penyimpanan data.\n";
     }
+}
+
+// Fungsi untuk membaca isi file tabel konversi
+tAddr bacaTabelKonversi() {
+    tAddr awal = nullptr;
+    tAddr akhir = nullptr;
+
+    ifstream inFile("file/tabel_konversi.txt");
+    if (inFile.is_open()) {
+        char karakter;
+        while (inFile.get(karakter)) {
+            if (karakter != '|' && karakter != '\n') {
+                tAddr newNode = new NodeT;
+                newNode->info = karakter;
+                newNode->next = nullptr;
+
+                if (awal == nullptr) {
+                    awal = akhir = newNode;
+                } else {
+                    akhir->next = newNode;
+                    akhir = newNode;
+                }
+            }
+        }
+        inFile.close();
+    } else {
+        cout << "Gagal membaca file tabel konversi." << endl;
+    }
+
+    return awal;
+}
+// fungsi untuk mengecek karakter dalam string genap atau ganjil, jika ganjil maka akan ditambah X, dan genap bernilai false
+string chekNumChar(string str, bool& genap) {
+    int panjang = str.length();
+    if (panjang % 2 == 0) {
+        genap = true;
+    } else {
+        genap = false;
+        str += 'X';
+    }
+    return str;
+}
+// fungsi untuk menambahkan karakter 1 (jika genap bernilai true) atau 0 (jika genap bernilai false) padasaat sebelum dimasukkan ke file
+string addAngka(string str, bool genap) {
+    if (genap) {
+        str += "1";
+    } else {
+        str += "0";
+    }
+    return str;
 }

@@ -6,6 +6,13 @@
 
 using namespace std;
 
+typedef struct NodeT *tAddr;
+typedef struct NodeP *pAddr;
+typedef struct NodeK *kAddr;
+typedef struct UserData *dtAddr;
+typedef struct userDaftar *dfAddr;
+typedef struct UserHasil *hsAddr;
+
 struct UserData {
     string nik;
     string password;
@@ -13,6 +20,7 @@ struct UserData {
     string tanggallahir;
     string alamat;
     string clueKeamanan;
+    dtAddr next;
 };
 
 struct AdminData {
@@ -30,6 +38,7 @@ struct userDaftar {
     string tanggalperiksa;
     string pilihandokter;
     string carabayar;
+    dfAddr next;
 };
 
 struct UserHasil {
@@ -41,11 +50,9 @@ struct UserHasil {
     string pilihandokter;
     string hasilPemeriksaan;
     string resepObat;
+    hsAddr next;
 };
 
-typedef struct NodeT *tAddr;
-typedef struct NodeP *pAddr;
-typedef struct NodeK *kAddr;
 // Struct Node untuk linked list tabel konversi
 struct NodeT {
     char info;
@@ -63,6 +70,5 @@ struct NodeK {
     kAddr nextrow;
     kAddr nextcol;
 };
-
 
 #endif

@@ -90,7 +90,7 @@ bool lupaPassword() {
     }
 }
 
-bool registrasi() {
+bool registrasi(tAddr awalT, kAddr awalK, kAddr awalKinv) {
     UserData userData;
 
     cout << " ==================================== Halaman Registrasi ============================================ \n\n";
@@ -105,7 +105,7 @@ bool registrasi() {
         cin >> userData.nik;
         cin.ignore();
     }
-    userData.nik = hill_cipher_encrypt(userData.nik);
+    userData.nik = hill_cipher_encrypt(userData.nik, awalT, awalK);
 
     ifstream inFile("file/akun_pengguna.txt");
     if (inFile.is_open()) {
@@ -133,7 +133,7 @@ bool registrasi() {
 
         getline(cin, userData.namalengkap);
     }
-    userData.namalengkap = hill_cipher_encrypt(userData.namalengkap);
+    // userData.namalengkap = hill_cipher_encrypt(userData.namalengkap, awalT, awalK);
 
     cout << "Tanggal Lahir (dd/mm/yyyy) : ";
     getline(cin, userData.tanggallahir);
@@ -143,7 +143,7 @@ bool registrasi() {
         cout << "Masukkan Tanggal Lahir : ";
         getline(cin, userData.tanggallahir);
     }
-    userData.tanggallahir = hill_cipher_encrypt(userData.tanggallahir);
+    userData.tanggallahir = hill_cipher_encrypt(userData.tanggallahir, awalT, awalK);
 
     cout << "Alamat Rumah : ";
     getline(cin, userData.alamat);
@@ -154,7 +154,7 @@ bool registrasi() {
 
         getline(cin, userData.alamat);
     }
-    userData.alamat = hill_cipher_encrypt(userData.alamat);
+    userData.alamat = hill_cipher_encrypt(userData.alamat, awalT, awalK);
 
     cout << "Masukkan Password : ";
     getline(cin, userData.password);
@@ -164,7 +164,7 @@ bool registrasi() {
         cout << "Masukkan Password : ";
         getline(cin, userData.password);
     }
-    userData.password = hill_cipher_encrypt(userData.password);
+    userData.password = hill_cipher_encrypt(userData.password, awalT, awalK);
 
     cout << "Membuat Clue Keamanan\n";
     cout << "Note : Clue keamanan ini akan digunakan jika anda lupa password pada suatu saat. Isi dengan yang mudah diingat oleh anda!\n\n";
@@ -176,13 +176,62 @@ bool registrasi() {
         cout << "Masukkan Clue Keamanan : ";
         getline(cin, userData.clueKeamanan);
     }
-    userData.clueKeamanan = hill_cipher_encrypt(userData.clueKeamanan);
+    userData.clueKeamanan = hill_cipher_encrypt(userData.clueKeamanan, awalT, awalK);
     
-    if (simpanDataPasien(userData)) {
+    // Untuk sorting dalam file
+    dtAddr awalD = nullptr;
+    dtAddr akhirD = nullptr;
+    ifstream myFile("file/akun_pengguna.txt");
+    if (myFile.is_open()) {
+        string line;
+        while (getline(myFile, line)) {
+            stringstream ss(line);
+            UserData data;
+            getline(ss, data.nik, '|');
+            getline(ss, data.password, '|');
+            getline(ss, data.namalengkap, '|');
+            getline(ss, data.tanggallahir, '|');
+            getline(ss, data.alamat, '|');
+            getline(ss, data.clueKeamanan, '|');
+            data.next = nullptr;
+
+            data.namalengkap = hill_cipher_decrypt(data.namalengkap, awalT, awalKinv);
+
+            insertUserData(data, awalD, akhirD);
+        }
+        myFile.close();
+    } else {
+        cout << "Gagal membuka file untuk dijadikan LL" << endl;
+    }
+
+    cout << "LL insert akhir :" << endl;
+    cetakListUserData(awalD);
+    system("pause");
+
+    insertTengahUserData(userData, awalD, akhirD);
+
+    cout << "LL insert tengah :" << endl;
+    cetakListUserData(awalD);
+    system("pause");
+
+    // Tulis ulang data ke file
+    ofstream outFile("file/akun_pengguna.txt", ios::trunc);
+    if (outFile.is_open()) {
+        dtAddr current = awalD;
+        while (current != nullptr) {
+            current->namalengkap = hill_cipher_encrypt(current->namalengkap, awalT, awalK);
+            outFile << current->nik << "|" << current->password << "|" << current->namalengkap << "|" << current->tanggallahir << "|" << current->alamat << "|" << current->clueKeamanan << endl;
+            current = current->next;
+        }
+        outFile.close();
+        system("cls");
         cout << "Data Berhasil Disimpan.\n\n";
+        hapusLinkedListUserData(awalD);
         return true;
     } else {
+        system("cls");
         cout << "Gagal menyimpan data.\n";
+        hapusLinkedListUserData(awalD);
         return false;
     }
 }

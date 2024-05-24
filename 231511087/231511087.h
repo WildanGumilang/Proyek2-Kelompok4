@@ -17,7 +17,7 @@ kAddr inversKey(kAddr awal, int determinan);
 pAddr perkalianMatriksLL(pAddr pAwal, kAddr kAwal);
 bool simpanDataPasien(const UserData& userData);
 bool lupaPassword();
-bool registrasi();
+bool registrasi(tAddr awalT, kAddr awalK, kAddr awalKinv);
 bool login(string& nik, string& namalengkap, string& tanggallahir, string& alamat, string& password);
 bool loginAdmin(string& namaAdmin);
 

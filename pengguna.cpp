@@ -1,3 +1,4 @@
+#include "program.h"
 #include "231511087/231511087.h"
 #include "231511067/231511067.h"
 #include "231511080/231511080.h"
@@ -9,6 +10,13 @@ int main() {
     int pilihan;
     string nik, password, namalengkap, tanggallahir, alamat;
     bool loginBerhasil = false;
+
+    //Buat LL tabel & LL key
+    tAddr awalT = bacaTabelKonversi();
+    kAddr awalK = buatLinkedListKey(2, 1, 3, 4);
+    kAddr awalKinv = buatLinkedListKey(2, 1, 3, 4);
+    int det = countDeterminan(awalKinv);
+    awalKinv = inversKey(awalKinv, det);
 
     //HALAMAN AWAL
 
@@ -37,7 +45,7 @@ int main() {
                 case 1:
                     // HALAMAN REGISTRASI
                     system("cls");
-                    if (registrasi()) {
+                    if (registrasi(awalT, awalK, awalKinv)) {
                         cout << " --------------------------------- Registrasi Berhasil! --------------------------------------------- \n\n";
                     } else {
                         cout << "Gagal Registrasi.\n";
@@ -46,12 +54,12 @@ int main() {
                 case 2:
                     // HALAMAN LOGIN
                     system("cls");
-                    loginBerhasil = login(nik, namalengkap, tanggallahir, alamat, password);
+                    loginBerhasil = login(nik, namalengkap, tanggallahir, alamat, password, awalT, awalK, awalKinv);
                     break;
                 case 3:
                     // HALAMAN LOGIN
                     system("cls");
-                    if (lupaPassword()) {
+                    if (lupaPassword(awalT, awalK)) {
                         cout << " ------------------------------ Password Berhasil Diganti! ----------------------------------------- \n\n";
                     } else {
                         cout << "Gagal mengubah password.\n";
@@ -87,12 +95,12 @@ int main() {
                 case 1:
                     system("cls");
                     // HALAMAN DATAPASIEN
-                    tampilkanDataPasienByNIK(nik);
+                    tampilkanDataPasienByNIK(nik, awalT, awalK, awalKinv);
                     break;
                 case 2:
                     system("cls");
                     // HALAMAN PENDAFTARAN
-                    if (pendaftaranPeriksa(nik, namalengkap, tanggallahir)) {
+                    if (pendaftaranPeriksa(nik, namalengkap, tanggallahir, awalT, awalK, awalKinv)) {
                         cout << " ------------------------------ Pendaftaran Berhasil Dilakukan! ----------------------------------------- \n\n";
                     } else {
                         cout << "Gagal melakukan pendaftaran.\n";
@@ -101,7 +109,7 @@ int main() {
                 case 3:
                     system("cls");
                     // HALAMAN HASIL PERIKSA
-                    tampilkanSuratHasilPemeriksaan(nik);
+                    tampilkanSuratHasilPemeriksaan(nik, awalT, awalK, awalKinv);
                     break;
                 case 4:
                     // KELUAR
@@ -112,5 +120,5 @@ int main() {
             }
         }
     }
-    return 0;
+    
 }

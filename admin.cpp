@@ -11,6 +11,13 @@ int main() {
     string namaAdmin, passwordAdmin, nomorAdmin, jawaban;
     bool loginBerhasil = false;
 
+    //Buat LL tabel & LL key
+    tAddr awalT = bacaTabelKonversi();
+    kAddr awalK = buatLinkedListKey(2, 1, 3, 4);
+    kAddr awalKinv = buatLinkedListKey(2, 1, 3, 4);
+    int det = countDeterminan(awalKinv);
+    awalKinv = inversKey(awalKinv, det);
+
     //HALAMAN AWAL
 
     while (true) {
@@ -35,7 +42,7 @@ int main() {
                 case 1:
                     // HALAMAN LOGIN
                     system("cls");
-                    loginBerhasil = loginAdmin(namaAdmin);
+                    loginBerhasil = loginAdmin(namaAdmin, awalT, awalK, awalKinv);
                     break;
                 case 2:
                     // KELUAR
@@ -66,16 +73,16 @@ int main() {
                 case 1:
                     system("cls");
                     // HALAMAN MENAMPILKAN DATA PASIEN
-                    tampilkanSeluruhDataPasien();
+                    tampilkanSeluruhDataPasien(awalT, awalKinv);
                     break;
                 case 2:
                     system("cls");
                     // HALAMAN MENAMPILKAN DATA PENDAFTARAN PASIEN
-                    tampilkanDataPeriksa();
+                    tampilkanDataPeriksa(awalT, awalKinv);
                     cout << "Ingin Membuat Hasil Periksa Pasien? (y/n)";
                     cin >> jawaban;
                     if (jawaban == "y" || jawaban == "ya"){
-                        if (buatSuratHasilPemeriksaan()) {
+                        if (buatSuratHasilPemeriksaan(awalT, awalK)) {
                         cout << " ------------------------------ Surat Hasil Pemeriksaan Berhasil Dibuat ! ----------------------------------------- \n\n";
                         } else {
                             cout << "Gagal membuat surat hasil pemeriksaan.\n";
@@ -84,12 +91,11 @@ int main() {
                     break;
                 case 3:
                     // KELUAR
-                    cout << "Terima kasih telah menggunakan layanan kami.\n";
-                    return 0;
+                        cout << "Terima kasih telah menggunakan layanan kami.\n";
+                        return 0;
                 default:
-                    cout << "Pilihan tidak valid. Silakan masukkan pilihan antara 1-4.\n";
+                    cout << "Pilihan tidak valid. Silakan masukkan pilihan antara 1-3.\n";
             }
         }
     }
-    return 0;
 }

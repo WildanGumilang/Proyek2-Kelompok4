@@ -16,10 +16,8 @@ char mod[94] = {
     '[', ']', '<', '>', '.', ',', ';', '"', '\'', '`', '\\', '/', '?', ':', '~', ' '
 };
 
-string hill_cipher_encrypt(string plainteks) {
+string hill_cipher_encrypt(string plainteks, tAddr awalT, kAddr awalK) {
 
-    tAddr awalT = bacaTabelKonversi();
-    kAddr awalK = buatLinkedListKey(2, 1, 3, 4);
     pAddr awalP = nullptr;
     bool genap;
     plainteks = chekNumChar(plainteks, genap);
@@ -34,7 +32,7 @@ string hill_cipher_encrypt(string plainteks) {
     plainteks = addAngka(plainteks, genap);
     // cout << "pLAINTEKS setelah dikonversi didalam function = " << plainteks << endl;
 
-    if(hapusLinkedList(awalP) && hapusLinkedListKey(awalK) && hapusLinkedListTabel(awalT)) {
+    if(hapusLinkedList(awalP)) {
         return plainteks;
     }
 }
@@ -88,9 +86,9 @@ string enkripsi(const string& plaintext) {
     return encrypted_text;
 }
 
-void tampilkanDataPasienByNIK(string& nik) {
+void tampilkanDataPasienByNIK(string& nik, tAddr awalT, kAddr awalK, kAddr awalKinv) {
 
-    nik = hill_cipher_encrypt(nik);
+    nik = hill_cipher_encrypt(nik, awalT, awalK);
 
     ifstream inFile("file/akun_pengguna.txt");
     if (inFile.is_open()) {
@@ -109,12 +107,12 @@ void tampilkanDataPasienByNIK(string& nik) {
 
             if (userData.nik == nik) {
 
-                userData.nik = hill_cipher_decrypt(userData.nik);
-                userData.password = hill_cipher_decrypt(userData.password);
-                userData.namalengkap = hill_cipher_decrypt(userData.namalengkap);
-                userData.tanggallahir = hill_cipher_decrypt(userData.tanggallahir);
-                userData.alamat = hill_cipher_decrypt(userData.alamat);
-                userData.clueKeamanan = hill_cipher_decrypt(userData.clueKeamanan);
+                userData.nik = hill_cipher_decrypt(userData.nik, awalT, awalKinv);
+                userData.password = hill_cipher_decrypt(userData.password, awalT, awalKinv);
+                userData.namalengkap = hill_cipher_decrypt(userData.namalengkap, awalT, awalKinv);
+                userData.tanggallahir = hill_cipher_decrypt(userData.tanggallahir, awalT, awalKinv);
+                userData.alamat = hill_cipher_decrypt(userData.alamat, awalT, awalKinv);
+                userData.clueKeamanan = hill_cipher_decrypt(userData.clueKeamanan, awalT, awalKinv);
 
                 cout << "+---------------------------------------------+\n";
                 cout << "|            Informasi Pengguna              |\n";
@@ -138,7 +136,7 @@ void tampilkanDataPasienByNIK(string& nik) {
         }
         inFile.close();
 
-        nik = hill_cipher_decrypt(nik);
+        nik = hill_cipher_decrypt(nik, awalT, awalKinv);
         if (!found) {
             cout << "Data pasien dengan NIK " << nik << " tidak ditemukan." << endl;
         }
@@ -147,15 +145,6 @@ void tampilkanDataPasienByNIK(string& nik) {
     }
 }
 
-// Fungsi untuk menghapus semua node dalam linked list
-bool hapusLinkedListTabel(tAddr& awalT) {
-    while (awalT != nullptr) {
-        tAddr temp = awalT;
-        awalT = awalT->next;
-        delete temp;
-    }
-    return awalT == nullptr;
-}
 /// Fungsi untuk menghapus semua node dalam linked list
 bool hapusLinkedList(pAddr& awalP) {
     while (awalP != nullptr) {
@@ -164,19 +153,6 @@ bool hapusLinkedList(pAddr& awalP) {
         delete temp;
     }
     return awalP == nullptr;
-}
-
-bool hapusLinkedListKey(kAddr& awalK) {
-    while (awalK != nullptr) {
-        kAddr tempRow = awalK;
-        while (tempRow != nullptr) {
-            kAddr temp = tempRow;
-            tempRow = tempRow->nextcol;
-            delete temp;
-        }
-        awalK = awalK->nextrow;
-    }
-    return awalK == nullptr;
 }
 
 // Fungsi untuk mencari karakter pada tabel konversi berdasarkan indeks
@@ -195,6 +171,7 @@ char cariKarakter(const tAddr awal, int indeks) {
         return '\0'; // Indeks di luar jangkauan tabel konversi
     }
 }
+
 // Fungsi untuk mengkonversi angka pada setiap info node menjadi karakter
 string konversiAngkaKePlainteks(const pAddr awal, const tAddr tabelKonversi) {
     pAddr current = awal;
@@ -213,3 +190,12 @@ string konversiAngkaKePlainteks(const pAddr awal, const tAddr tabelKonversi) {
     return hasilkonversi;
 }
 
+void hapusLinkedListUserDaftar(dfAddr &awalD) {
+    dfAddr current = awalD;
+    while (current != nullptr) {
+        dfAddr nextNode = current->next;
+        delete current;
+        current = nextNode;
+    }
+    awalD = nullptr;
+}

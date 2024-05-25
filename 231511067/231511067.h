@@ -10,14 +10,12 @@
 
 using namespace std;
 
-string hill_cipher_encrypt(string plainteks);
-bool hapusLinkedListTabel(tAddr& awalT);
+string hill_cipher_encrypt(string plainteks, tAddr awalT, kAddr awalK);
 bool hapusLinkedList(pAddr& awalP);
-bool hapusLinkedListKey(kAddr& awalK);
 char cariKarakter(const tAddr awal, int indeks);
 string konversiAngkaKePlainteks(const pAddr awal, const tAddr tabelKonversi);
 string enkripsi(const string& plaintext);
-void tampilkanDataPasienByNIK(std::string& nik);
-
+void tampilkanDataPasienByNIK(std::string& nik, tAddr awalT, kAddr awalK, kAddr awalKinv);
+void hapusLinkedListUserDaftar(dfAddr &awalD);
 
 #endif

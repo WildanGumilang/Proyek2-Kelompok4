@@ -17,3 +17,4 @@ kAddr createNodeKey(int nilai);
 kAddr buatLinkedListKey(int Key11, int Key12, int Key21, int Key22); 
 string chekAndDelLastBool(string str, bool& chekJumlah);
 string deleteLastBool(string str, bool chekJumlah);
+bool insertUserDaftar(const userDaftar& data, dfAddr& awal, dfAddr& akhir);

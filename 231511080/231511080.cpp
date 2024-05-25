@@ -194,3 +194,21 @@ string deleteLastBool(string str, bool chekJumlah) {
     }
     return str;
 }
+
+bool insertUserDaftar(const userDaftar& data, dfAddr& awal, dfAddr& akhir) {
+    dfAddr newNode = new userDaftar;
+    if (newNode != nullptr) {
+        *newNode = data;
+        newNode->next = nullptr;
+        if (awal == nullptr) {
+            awal = newNode;
+        } else {
+            akhir->next = newNode;
+        }
+        akhir = newNode;
+        return true;
+    } else {
+        cout << "Alokasi memori gagal. Tidak dapat menyisipkan node baru." << endl;
+        return false;
+    }
+}

@@ -20,5 +20,7 @@ bool lupaPassword(tAddr awalT, kAddr awalK);
 bool registrasi(tAddr awalT, kAddr awalK, kAddr awalKinv);
 bool login(string& nik, string& namalengkap, string& tanggallahir, string& alamat, string& password, tAddr awalT, kAddr awalK, kAddr awalKinv);
 bool loginAdmin(string& namaAdmin, tAddr awalT, kAddr awalK, kAddr awalKinv);
+bool insertUserData(const UserData& data, dtAddr& awal, dtAddr& akhir);
+// void cetakListUserData(dtAddr awal);
 
 #endif

@@ -179,7 +179,7 @@ bool registrasi(tAddr awalT, kAddr awalK, kAddr awalKinv) {
             getline(ss, data.namalengkap, '|');
             getline(ss, data.tanggallahir, '|');
             getline(ss, data.alamat, '|');
-            getline(ss, data.clueKeamanan, '|');
+            getline(ss, data.clueKeamanan);
             data.next = nullptr;
 
             data.namalengkap = hill_cipher_decrypt(data.namalengkap, awalT, awalKinv);
@@ -191,15 +191,15 @@ bool registrasi(tAddr awalT, kAddr awalK, kAddr awalKinv) {
         cout << "Gagal membuka file untuk dijadikan LL" << endl;
     }
 
-    cout << "LL insert akhir :" << endl;
-    cetakListUserData(awalD);
-    system("pause");
+    // cout << "LL insert akhir :" << endl;
+    // cetakListUserData(awalD);
+    // system("pause");
 
     insertTengahUserData(userData, awalD, akhirD);
 
-    cout << "LL insert tengah :" << endl;
-    cetakListUserData(awalD);
-    system("pause");
+    // cout << "LL insert tengah :" << endl;
+    // cetakListUserData(awalD);
+    // system("pause");
 
     // Tulis ulang data ke file
     ofstream outFile("file/akun_pengguna.txt", ios::trunc);
@@ -352,3 +352,115 @@ bool loginAdmin(string& namaAdmin, tAddr awalT, kAddr awalK, kAddr awalKinv) {
         return false;
     }
 }
+
+// Fungsi untuk menghitung determinan matriks 2x2 dari linked list
+int countDeterminan(kAddr awal) {
+    if (awal == nullptr || awal->nextrow == nullptr || awal->nextcol == nullptr || awal->nextrow->nextcol == nullptr) {
+        cout << "Error: Linked list tidak lengkap." << endl;
+        return 0;
+    }
+    int det = (awal->info * awal->nextrow->nextcol->info) - (awal->nextrow->info * awal->nextcol->info);
+    return det;
+}
+
+kAddr inversKey(kAddr awal, int determinan) {
+    if (determinan == 0) {
+        cout << "Error: Determinan nol, tidak dapat menghitung invers determinan." << endl;
+        return nullptr;
+    }
+
+    // Cari invers determinan
+    int inverseDeterminan = 0;
+    for (int i = 1; i < 94; ++i) {
+        if ((determinan * i) % 94 == 1) {
+            inverseDeterminan = i;
+            break;
+        }
+    }
+
+    int a = awal->info;
+    int b = awal->nextrow->info;
+    int c = awal->nextcol->info;
+    int d = awal->nextrow->nextcol->info;
+
+    awal->info = d;
+    awal->nextrow->info = -b;
+    awal->nextcol->info = -c;
+    awal->nextrow->nextcol->info = a;
+
+    kAddr current = awal;
+    while (current != nullptr) {
+        current->info = ((current->info * inverseDeterminan) % 94); //Dalam operasi modulus, jika hasil perkalian adalah negatif, maka hasil modulus juga akan negatif.
+        if (current->info < 0) {
+            current->info += 94; // memastikan hasil modulus selalu positif
+        }
+        current = current->nextrow;
+    }
+    current = awal->nextcol;
+    while (current != nullptr) {
+        current->info = ((current->info * inverseDeterminan) % 94); //Dalam operasi modulus, jika hasil perkalian adalah negatif, maka hasil modulus juga akan negatif.
+        if (current->info < 0) {
+            current->info += 94; // memastikan hasil modulus selalu positif
+        }
+        current = current->nextrow;
+    }
+    return awal;
+}
+
+// fungsi untuk perkalian matriksLL kunci dengan matriksLL plainteks/cipherteks 
+pAddr perkalianMatriksLL(pAddr pAwal, kAddr kAwal) { 
+    pAddr currentP = pAwal;
+
+    while (currentP != nullptr && currentP->next != nullptr) {
+        kAddr currentK = kAwal;
+
+        int node1 = currentP->info;
+        int node2 = currentP->next->info;
+
+
+        int hasil1 = (((node1 * currentK->info) + (node2 * currentK->nextrow->info)) % 94);
+
+        currentK = currentK->nextcol;
+        int hasil2 = (((node1 * currentK->info) + (node2 * currentK->nextrow->info)) % 94);
+
+
+        currentP->info = hasil1;
+        currentP->next->info = hasil2;
+
+        currentP = currentP->next->next;
+    }
+    return pAwal;
+}
+
+
+bool insertUserData(const UserData& data, dtAddr& awal, dtAddr& akhir) {
+    dtAddr newNode = new UserData;
+    if (newNode != nullptr) {
+        *newNode = data;
+        newNode->next = nullptr;
+        if (awal == nullptr) {
+            awal = newNode;
+        } else {
+            akhir->next = newNode;
+        }
+        akhir = newNode;
+        return true;
+    } else {
+        cout << "Alokasi memori gagal. Tidak dapat menyisipkan node baru." << endl;
+        return false;
+    }
+}
+
+// void cetakListUserData(dtAddr awal) {
+//     dtAddr current = awal;
+//     while (current != nullptr) {
+//         cout << "NIK: " << current->nik << endl;
+//         cout << "Password: " << current->password << endl;
+//         cout << "Nama: " << current->namalengkap << endl;
+//         cout << "Tanggal Lahir: " << current->tanggallahir << endl;
+//         cout << "Alamat: " << current->alamat << endl;
+//         cout << "Clue Keamanan: " << current->clueKeamanan << endl;
+//         cout << "------------------------------" << endl;
+//         current = current->next;
+//     }
+// }

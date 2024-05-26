@@ -434,7 +434,7 @@ pAddr perkalianMatriksLL(pAddr pAwal, kAddr kAwal) {
 
 
 bool insertUserData(const UserData& data, dtAddr& awal, dtAddr& akhir) {
-    dtAddr newNode = new UserData;
+    dtAddr newNode= (UserData*)malloc(sizeof(UserData));
     if (newNode != nullptr) {
         *newNode = data;
         newNode->next = nullptr;

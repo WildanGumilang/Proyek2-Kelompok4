@@ -14,3 +14,5 @@ void tampilkanSuratHasilPemeriksaan(string& targetNik);
 bool buatSuratHasilPemeriksaan();
 pAddr konversiPlainteksKeAngka(const string& plainteks, tAddr awal);
 int cariIndeks(tAddr head, char karakter);
+bool insertTengahUserData(const UserData& data, dtAddr& awal, dtAddr& akhir);
+void hapusLinkedListUserData(dtAddr &awalD);

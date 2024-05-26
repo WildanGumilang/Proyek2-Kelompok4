@@ -51,7 +51,7 @@ pAddr konversiPlainteksKeAngka(const string& plainteks, tAddr awal) {
     return angkaAwal;
 }
 
-bool buatSuratHasilPemeriksaan()
+bool buatSuratHasilPemeriksaan(tAddr awalT,kAddr awalK)
 {
     string nomorPendaftaran, nik, namalengkap, tanggallahir, tanggalperiksa, pilihandokter;
     cout << "Masukkan Nomor Pendaftaran Pasien : ";
@@ -62,7 +62,7 @@ bool buatSuratHasilPemeriksaan()
         cout << "Masukkan nomor pendaftaran : ";
         cin >> nomorPendaftaran;
     }
-    nomorPendaftaran = hill_cipher_encrypt(nomorPendaftaran);
+    nomorPendaftaran = hill_cipher_encrypt(nomorPendaftaran, awalT, awalK);
     
     ifstream inFile("file/daftarperiksa.txt");
     if (inFile.is_open()) {
@@ -103,7 +103,7 @@ bool buatSuratHasilPemeriksaan()
                 cout << "Masukkan Hasil pemeriksaan : ";
                 getline(cin, hasilPemeriksaan);
             }
-            hasilPemeriksaan = hill_cipher_encrypt(hasilPemeriksaan);
+            hasilPemeriksaan = hill_cipher_encrypt(hasilPemeriksaan, awalT, awalK);
 
             // Mengisi resep obat
             string resepObat;
@@ -115,7 +115,7 @@ bool buatSuratHasilPemeriksaan()
                 cout << "Masukkan Resep obat : ";
                 getline(cin, resepObat);
             }
-            resepObat = hill_cipher_encrypt(resepObat);
+            resepObat = hill_cipher_encrypt(resepObat, awalT, awalK);
             ofstream outFile("file/hasilperiksa.txt", ios::app);
             if (outFile.is_open()) 
             {
@@ -139,12 +139,9 @@ bool buatSuratHasilPemeriksaan()
     }
 }
 
+void tampilkanSuratHasilPemeriksaan(string& targetNik, tAddr awalT, kAddr awalK, kAddr awalKinv) {
 
-
-
-void tampilkanSuratHasilPemeriksaan(string& targetNik) {
-
-    targetNik = hill_cipher_encrypt(targetNik);
+    targetNik = hill_cipher_encrypt(targetNik, awalT, awalK);
     ifstream inFile("file/hasilperiksa.txt");
     if (inFile.is_open()) {
         cout << "================================================================================================================================" << endl;
@@ -170,18 +167,18 @@ void tampilkanSuratHasilPemeriksaan(string& targetNik) {
             if (data.nik == targetNik) {
                 found = true;
 
-                data.nomorpendaftaran = hill_cipher_decrypt(data.nomorpendaftaran);
-                data.nik = hill_cipher_decrypt(data.nik);
-                data.namalengkap = hill_cipher_decrypt(data.namalengkap);
-                data.tanggallahir = hill_cipher_decrypt(data.tanggallahir);
-                data.hasilPemeriksaan = hill_cipher_decrypt(data.hasilPemeriksaan);
-                data.resepObat = hill_cipher_decrypt(data.resepObat);
+                data.nomorpendaftaran = hill_cipher_decrypt(data.nomorpendaftaran, awalT, awalKinv);
+                data.nik = hill_cipher_decrypt(data.nik, awalT, awalKinv);
+                data.namalengkap = hill_cipher_decrypt(data.namalengkap, awalT, awalKinv);
+                data.tanggallahir = hill_cipher_decrypt(data.tanggallahir, awalT, awalKinv);
+                data.hasilPemeriksaan = hill_cipher_decrypt(data.hasilPemeriksaan, awalT, awalKinv);
+                data.resepObat = hill_cipher_decrypt(data.resepObat, awalT, awalKinv);
 
                 cout << data.nomorpendaftaran << "\t\t" << data.nik << "\t" << data.namalengkap << "\t" << data.tanggallahir << "\t" << data.tanggalperiksa << "\t" 
                      << data.pilihandokter << "\t" << data.hasilPemeriksaan << "\t" << data.resepObat << endl;
             }
         }
-        targetNik = hill_cipher_decrypt(targetNik);
+        targetNik = hill_cipher_decrypt(targetNik, awalT, awalKinv);
         if (!found) {
             cout << "Tidak ditemukan surat hasil pemeriksaan untuk NIK " << targetNik << endl;
         }
@@ -191,4 +188,48 @@ void tampilkanSuratHasilPemeriksaan(string& targetNik) {
     } else {
         cout << "Gagal membuka file hasilpemeriksaan.txt.\n";
     }
+}
+
+
+bool insertTengahUserData(const UserData& data, dtAddr& awal, dtAddr& akhir) {
+    dtAddr newNode = new UserData;
+    if (newNode != nullptr) {
+        *newNode = data;
+        newNode->next = nullptr;
+
+        if (awal == nullptr) {  // Linked list kosong
+            awal = akhir = newNode;
+        } else if (awal->namalengkap > newNode->namalengkap) {  // Sisipkan di awal
+            newNode->next = awal;
+            awal = newNode;
+        } else {  // Sisipkan di tengah atau akhir
+            dtAddr prev = nullptr;
+            dtAddr current = awal;
+            while (current != nullptr && current->namalengkap <= newNode->namalengkap) {
+                prev = current;
+                current = current->next;
+            }
+            if (current == nullptr) {  // Sisipkan di akhir
+                akhir->next = newNode;
+                akhir = newNode;
+            } else {  // Sisipkan di tengah
+                prev->next = newNode;
+                newNode->next = current;
+            }
+        }
+        return true;
+    } else {
+        cout << "Alokasi memori gagal. Tidak dapat menyisipkan node baru." << endl;
+        return false;
+    }
+}
+
+void hapusLinkedListUserData(dtAddr &awalD) {
+    dtAddr current = awalD;
+    while (current != nullptr) {
+        dtAddr nextNode = current->next;
+        delete current;
+        current = nextNode;
+    }
+    awalD = nullptr;
 }

@@ -207,3 +207,10 @@ string addAngka(string str, bool genap) {
     }
     return str;
 }
+
+bool insertTengahUserDaftar(const userDaftar& data, dfAddr& awal, dfAddr& akhir) {
+    dfAddr newNode = new userDaftar;
+    if (newNode != nullptr) {
+        *newNode = data;
+        newNode->next = nullptr;
+    }

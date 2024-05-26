@@ -13,27 +13,26 @@ string generateNomorPendaftaran() {
 }
 
 // Fungsi untuk mengisi pendaftaran pemeriksaan
-bool pendaftaranPeriksa(const string& nik, const string& namalengkap, const string& tanggallahir) {
+bool pendaftaranPeriksa(const string& nik, const string& namalengkap, const string& tanggallahir, tAddr awalT, kAddr awalK, kAddr awalKinv) {
     userDaftar pendaftaran;
 
     // Isi data pendaftaran
     pendaftaran.nomorPendaftaran = generateNomorPendaftaran();
-    pendaftaran.nomorPendaftaran = hill_cipher_encrypt(pendaftaran.nomorPendaftaran);
+    pendaftaran.nomorPendaftaran = hill_cipher_encrypt(pendaftaran.nomorPendaftaran, awalT, awalK);
     pendaftaran.nik = nik;
-    pendaftaran.nik = hill_cipher_encrypt(pendaftaran.nik);
+    pendaftaran.nik = hill_cipher_encrypt(pendaftaran.nik, awalT, awalK);
     pendaftaran.namalengkap = namalengkap;
-    pendaftaran.namalengkap = hill_cipher_encrypt(pendaftaran.namalengkap);
+    // pendaftaran.namalengkap = hill_cipher_encrypt(pendaftaran.namalengkap, awalT, awalK);
     pendaftaran.tanggallahir = tanggallahir;
-    pendaftaran.tanggallahir = hill_cipher_encrypt(pendaftaran.tanggallahir);
+    pendaftaran.tanggallahir = hill_cipher_encrypt(pendaftaran.tanggallahir, awalT, awalK);
 
     // Input data tambahan
     cout << "Masukkan Tanggal Periksa (dd/mm/yyyy): ";
     cin >> pendaftaran.tanggalperiksa;
-    getline(cin, pendaftaran.tanggalperiksa);
     while (pendaftaran.tanggalperiksa.find('|') != string::npos) {
         cout << "Pastikan tidak menggunakan simbol '|'. Silahkan masukkan lagi.\n";
         cout << "Masukkan Tanggal Periksa (dd/mm/yyyy): ";
-        getline(cin, pendaftaran.tanggalperiksa);
+        cin >> pendaftaran.tanggalperiksa;
     }
     
     // Pilihan dokter
@@ -98,7 +97,7 @@ bool pendaftaranPeriksa(const string& nik, const string& namalengkap, const stri
 }
 
 // Menampilkan data pendaftaran periksa
-void tampilkanDataPeriksa() {
+void tampilkanDataPeriksa(tAddr awalT, kAddr awalKinv) {
     userDaftar pendaftaran;
 
     ifstream inFile("file/daftarperiksa.txt");
@@ -106,7 +105,7 @@ void tampilkanDataPeriksa() {
         cout << "==================================================================================================================" << endl;
         cout << "                                SELURUH DATA PENDAFTARAN PERIKSA                                     " << endl;
         cout << "==================================================================================================================" << endl;
-        cout << "No.Pendaftaran\tNIK\tNama Lengkap\tTanggal Lahir\tTanggal Periksa\tPilihan Dokter\tCara Bayar" << endl;
+        cout << "No.Pendaftaran\tNama Lengkap\tNIK\tTanggal Lahir\tTanggal Periksa\tPilihan Dokter\tCara Bayar" << endl;
         cout << "------------------------------------------------------------------------------------------------------------------" << endl;
 
         string line;
@@ -121,18 +120,16 @@ void tampilkanDataPeriksa() {
             getline(ss, pilihandokter, '|');
             getline(ss, carabayar);
 
-            nomorPendaftaran = hill_cipher_decrypt(nomorPendaftaran);
-            nik = hill_cipher_decrypt(nik);
-            namalengkap = hill_cipher_decrypt(namalengkap);
-            tanggallahir = hill_cipher_decrypt(tanggallahir);
-            carabayar = hill_cipher_decrypt(carabayar);            
+            nomorPendaftaran = hill_cipher_decrypt(nomorPendaftaran, awalT, awalKinv);
+            nik = hill_cipher_decrypt(nik, awalT, awalKinv);
+            namalengkap = hill_cipher_decrypt(namalengkap, awalT, awalKinv);
+            tanggallahir = hill_cipher_decrypt(tanggallahir, awalT, awalKinv);
+            carabayar = hill_cipher_decrypt(carabayar, awalT, awalKinv);            
 
-            cout << nomorPendaftaran << "\t" << nik << "\t" << namalengkap << "\t" << tanggallahir << "\t" << tanggalperiksa << "\t" << pilihandokter << "\t" << carabayar << endl;
-
+            cout << nomorPendaftaran << "\t" << namalengkap << "\t" << nik << "\t" << tanggallahir << "\t" << tanggalperiksa << "\t" << pilihandokter << "\t" << carabayar << endl;
         }
         cout << "===================================================================================================" << endl;
         inFile.close();
-        
     } else {
         cout << "Gagal membuka file daftarperiksa.txt.\n";
     }

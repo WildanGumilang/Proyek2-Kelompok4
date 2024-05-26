@@ -211,7 +211,8 @@ string addAngka(string str, bool genap) {
 bool insertTengahUserDaftar(const userDaftar& data, dfAddr& awal, dfAddr& akhir) 
 {
     dfAddr newNode = new userDaftar;
-    if (newNode != nullptr) {
+    if (newNode != nullptr)
+     {
         *newNode = data;
         newNode->next = nullptr;
         if (awal == nullptr) {  // Linked list kosong
@@ -222,5 +223,27 @@ bool insertTengahUserDaftar(const userDaftar& data, dfAddr& awal, dfAddr& akhir)
         } else {  // Sisipkan di tengah atau akhir
             dfAddr prev = nullptr;
             dfAddr current = awal;
+            while (current != nullptr && current->namalengkap <= newNode->namalengkap)
+            {
+                prev = current;
+                current = current->next;
+            }
+            if (current == nullptr) 
+            {  // Sisipkan di akhir
+                akhir->next = newNode;
+                akhir = newNode;
+            } 
+            else 
+            {  // Sisipkan di tengah
+                prev->next = newNode;
+                newNode->next = current;
+            }
+        }
+        return true;
     } 
+    else 
+    {
+        cout << "Alokasi memori gagal. Tidak dapat menyisipkan node baru." << endl;
+        return false;
+    }
 }

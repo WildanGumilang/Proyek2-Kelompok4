@@ -208,9 +208,19 @@ string addAngka(string str, bool genap) {
     return str;
 }
 
-bool insertTengahUserDaftar(const userDaftar& data, dfAddr& awal, dfAddr& akhir) {
+bool insertTengahUserDaftar(const userDaftar& data, dfAddr& awal, dfAddr& akhir) 
+{
     dfAddr newNode = new userDaftar;
     if (newNode != nullptr) {
         *newNode = data;
         newNode->next = nullptr;
-    }
+        if (awal == nullptr) {  // Linked list kosong
+            awal = akhir = newNode;
+        } else if (awal->namalengkap > newNode->namalengkap) {  // Sisipkan di awal
+            newNode->next = awal;
+            awal = newNode;
+        } else {  // Sisipkan di tengah atau akhir
+            dfAddr prev = nullptr;
+            dfAddr current = awal;
+    } 
+}

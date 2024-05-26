@@ -82,16 +82,61 @@ bool pendaftaranPeriksa(const string& nik, const string& namalengkap, const stri
             break;
     }
 
-    // Simpan data ke dalam file
-    ofstream outFile("file/daftarperiksa.txt", ios::app); // Mode append agar tidak menghapus data yang sudah ada
+    // Untuk sorting dalam file, dengan membaca isi file dan menjadikan linked list
+    dfAddr awalD = nullptr;
+    dfAddr akhirD = nullptr;
+    ifstream myFile("file/daftarperiksa.txt");
+    if (myFile.is_open()) {
+        string line;
+        while (getline(myFile, line)) {
+            stringstream ss(line);
+            userDaftar data;
+            getline(ss, data.nomorPendaftaran, '|');
+            getline(ss, data.nik, '|');
+            getline(ss, data.namalengkap, '|');
+            getline(ss, data.tanggallahir, '|');
+            getline(ss, data.tanggalperiksa, '|');
+            getline(ss, data.pilihandokter, '|');
+            getline(ss, data.carabayar);
+            data.next = nullptr;
+
+            data.namalengkap = hill_cipher_decrypt(data.namalengkap, awalT, awalKinv);
+
+            insertUserDaftar(data, awalD, akhirD);
+        }
+        myFile.close();
+    } else {
+        cout << "Gagal membuka file untuk dijadikan LL" << endl;
+    }
+
+    // cout << "LL insert akhir :" << endl;
+    // cetakListUserDaftar(awalD);
+    // system("pause");
+
+    insertTengahUserDaftar(pendaftaran, awalD, akhirD);
+
+    // cout << "LL insert tengah :" << endl;
+    // cetakListUserDaftar(awalD);
+    // system("pause");
+
+    // Tulis ulang data ke file
+    ofstream outFile("file/daftarperiksa.txt", ios::trunc);
     if (outFile.is_open()) {
-        outFile << pendaftaran.nomorPendaftaran << "|" << pendaftaran.nik << "|" << pendaftaran.namalengkap << "|" << pendaftaran.tanggallahir << "|"
-                << pendaftaran.tanggalperiksa << "|" << pendaftaran.pilihandokter << "|" << pendaftaran.carabayar << endl;
+        dfAddr current = awalD;
+        while (current != nullptr) {
+            current->namalengkap = hill_cipher_encrypt(current->namalengkap, awalT, awalK);
+            outFile << current->nomorPendaftaran << "|" << current->nik << "|" << current->namalengkap << "|" << current->tanggallahir << "|" << current->tanggalperiksa << "|" << current->pilihandokter << "|" << current->carabayar << endl;
+            current = current->next;
+        }
         outFile.close();
-        cout << "Pendaftaran berhasil disimpan.\n";
+        system("cls");
+        cout << "Pendaftaran berhasil disimpan.\n\n";
+        hapusLinkedListUserDaftar(awalD);
         return true;
     } else {
+        system("cls");
         cout << "Gagal menyimpan data pendaftaran.\n";
+        hapusLinkedListUserDaftar(awalD);
         return false;
     }
 }

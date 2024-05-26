@@ -12,10 +12,10 @@
 
 using namespace std;
 
-string hill_cipher_decrypt(string cipherteks);
+string hill_cipher_decrypt(string cipherteks, tAddr awalT, kAddr awalKinv);
 string addAngka(string str, bool genap);
 string chekNumChar(string str, bool& genap);
 tAddr bacaTabelKonversi();
 string dekripsi(const string& encrypted_text);
-void tampilkanSeluruhDataPasien();
+void tampilkanSeluruhDataPasien(tAddr awalT, kAddr awalKinv);
 bool insertTengahUserDaftar(const userDaftar& data, dfAddr& awal, dfAddr& akhir);

@@ -69,16 +69,16 @@ bool pendaftaranPeriksa(const string& nik, const string& namalengkap, const stri
     switch (bayar) {
         case 1:
             pendaftaran.carabayar = "BPJS Kesehatan";
-            pendaftaran.carabayar = hill_cipher_encrypt(pendaftaran.carabayar);
+            pendaftaran.carabayar = hill_cipher_encrypt(pendaftaran.carabayar, awalT, awalK);
             break;
         case 2:
             pendaftaran.carabayar = "Pembayaran Reguler";
-            pendaftaran.carabayar = hill_cipher_encrypt(pendaftaran.carabayar);
+            pendaftaran.carabayar = hill_cipher_encrypt(pendaftaran.carabayar, awalT, awalK);
             break;
         default:
             cout << "Pilihan cara pembayaran tidak valid. Memilih secara default Pembayaran Reguler.\n";
             pendaftaran.carabayar = "Pembayaran Reguler";
-            pendaftaran.carabayar = hill_cipher_encrypt(pendaftaran.carabayar);
+            pendaftaran.carabayar = hill_cipher_encrypt(pendaftaran.carabayar, awalT, awalK);
             break;
     }
 

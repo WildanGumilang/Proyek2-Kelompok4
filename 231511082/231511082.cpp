@@ -172,12 +172,6 @@ tAddr bacaTabelKonversi() {
                 newNode->info = karakter;
                 newNode->next = nullptr;
 
-                if (awal == nullptr) {
-                    awal = akhir = newNode;
-                } else {
-                    akhir->next = newNode;
-                    akhir = newNode;
-                }
             }
         }
         inFile.close();

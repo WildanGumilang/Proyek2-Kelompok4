@@ -40,7 +40,7 @@ string hill_cipher_decrypt(string cipherteks) {
     // cout << "pLAINTEKS setelah dicek 0 1 = " << cipherteks << endl;
     // cout << "pLAINTEKS setelah dikonversi didalam function = " << cipherteks << endl;
 
-    if(hapusLinkedList(awalP) && hapusLinkedListKey(awalK) && hapusLinkedListTabel(awalT)) {
+    if(hapusLinkedList(awalP)) {
         return cipherteks;
     }
 }

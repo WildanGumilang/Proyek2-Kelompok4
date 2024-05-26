@@ -19,11 +19,7 @@ int mod_inverse(int a, int m) {
     return -1; // Modular inverse does not exist
 }
 
-string hill_cipher_decrypt(string cipherteks) {
-    tAddr awalT = bacaTabelKonversi();
-    kAddr awalK = buatLinkedListKey(2, 1, 3, 4);
-    int det = countDeterminan(awalK);
-    awalK = inversKey(awalK, det);
+string hill_cipher_decrypt(string cipherteks, tAddr awalT, kAddr awalKinv) {
 
     pAddr awalP = nullptr;
     bool genap;
@@ -31,7 +27,7 @@ string hill_cipher_decrypt(string cipherteks) {
     // cout << "pLAINTEKS setelah dihapus 0 atau 1 = " << cipherteks << endl;  
     awalP = konversiPlainteksKeAngka(cipherteks, awalT);
     // cout << "pLAINTEKS setelah dijadikan angka dan dijadikan linked list = ";
-    awalP = perkalianMatriksLL(awalP, awalK);
+    awalP = perkalianMatriksLL(awalP, awalKinv);
     // cout << "aNGKA setelah dikalikan matriks linked list = " << endl;
     // tampilkanLinkedList(awalP);
     cipherteks = konversiAngkaKePlainteks(awalP, awalT);
@@ -116,7 +112,7 @@ string dekripsi(const string& encrypted_text) {
     return decrypted_text;
 }
 
-void tampilkanSeluruhDataPasien() {
+void tampilkanSeluruhDataPasien(tAddr awalT, kAddr awalKinv) {
 
     ifstream inFile("file/akun_pengguna.txt");
     if (inFile.is_open()) {
@@ -134,25 +130,30 @@ void tampilkanSeluruhDataPasien() {
             getline(ss, user.alamat, '|');
             getline(ss, user.clueKeamanan);
 
-            user.nik = hill_cipher_decrypt(user.nik);
-            user.namalengkap = hill_cipher_decrypt(user.namalengkap);
-            user.tanggallahir = hill_cipher_decrypt(user.tanggallahir);
-            user.alamat = hill_cipher_decrypt(user.alamat);
+            user.nik = hill_cipher_decrypt(user.nik, awalT, awalKinv);
+            user.namalengkap = hill_cipher_decrypt(user.namalengkap, awalT, awalKinv);
+            user.tanggallahir = hill_cipher_decrypt(user.tanggallahir, awalT, awalKinv);
+            user.alamat = hill_cipher_decrypt(user.alamat, awalT, awalKinv);
 
             // Tambahkan data pengguna ke vektor userData
             userData.push_back(user);
         }
         inFile.close();
 
-        // Menampilkan semua data pasien
-        cout << "Data Pasien:" << endl;
+        cout << "=============================================================" << endl;
+        cout << "                         DATA PASIEN                         " << endl;
+        cout << "=============================================================" << endl;
+
+        // Menampilkan data pasien
         for (const auto& user : userData) {
-            cout << "NIK: " << user.nik << endl;
-            cout << "Nama Lengkap: " << user.namalengkap << endl;
-            cout << "Tanggal Lahir: " << user.tanggallahir << endl;
-            cout << "Alamat: " << user.alamat << endl;
-            cout << "-------------------------------------------" << endl;
+            cout << "Nama Lengkap  : " << user.namalengkap << endl;
+            cout << "NIK           : " << user.nik << endl;
+            cout << "Tanggal Lahir : " << user.tanggallahir << endl;
+            cout << "Alamat        : " << user.alamat << endl;
+            cout << "-------------------------------------------------------------" << endl;
         }
+        cout << "=============================================================" << endl;
+
     } else {
         cout << "Gagal mengakses penyimpanan data.\n";
     }
@@ -208,13 +209,12 @@ string addAngka(string str, bool genap) {
     return str;
 }
 
-bool insertTengahUserDaftar(const userDaftar& data, dfAddr& awal, dfAddr& akhir) 
-{
+bool insertTengahUserDaftar(const userDaftar& data, dfAddr& awal, dfAddr& akhir) {
     dfAddr newNode = new userDaftar;
-    if (newNode != nullptr)
-     {
+    if (newNode != nullptr) {
         *newNode = data;
         newNode->next = nullptr;
+
         if (awal == nullptr) {  // Linked list kosong
             awal = akhir = newNode;
         } else if (awal->namalengkap > newNode->namalengkap) {  // Sisipkan di awal
@@ -223,26 +223,20 @@ bool insertTengahUserDaftar(const userDaftar& data, dfAddr& awal, dfAddr& akhir)
         } else {  // Sisipkan di tengah atau akhir
             dfAddr prev = nullptr;
             dfAddr current = awal;
-            while (current != nullptr && current->namalengkap <= newNode->namalengkap)
-            {
+            while (current != nullptr && current->namalengkap <= newNode->namalengkap) {
                 prev = current;
                 current = current->next;
             }
-            if (current == nullptr) 
-            {  // Sisipkan di akhir
+            if (current == nullptr) {  // Sisipkan di akhir
                 akhir->next = newNode;
                 akhir = newNode;
-            } 
-            else 
-            {  // Sisipkan di tengah
+            } else {  // Sisipkan di tengah
                 prev->next = newNode;
                 newNode->next = current;
             }
         }
         return true;
-    } 
-    else 
-    {
+    } else {
         cout << "Alokasi memori gagal. Tidak dapat menyisipkan node baru." << endl;
         return false;
     }

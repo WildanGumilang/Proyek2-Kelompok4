@@ -18,3 +18,4 @@ string chekNumChar(string str, bool& genap);
 tAddr bacaTabelKonversi();
 string dekripsi(const string& encrypted_text);
 void tampilkanSeluruhDataPasien();
+bool insertTengahUserDaftar(const userDaftar& data, dfAddr& awal, dfAddr& akhir);

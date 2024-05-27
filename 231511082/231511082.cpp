@@ -38,6 +38,8 @@ string hill_cipher_decrypt(string cipherteks, tAddr awalT, kAddr awalKinv) {
 
     if(hapusLinkedList(awalP)) {
         return cipherteks;
+    } else {
+        return "Proses Dekripsi Data Gagal.\n";
     }
 }
 

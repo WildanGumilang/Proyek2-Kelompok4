@@ -34,6 +34,8 @@ string hill_cipher_encrypt(string plainteks, tAddr awalT, kAddr awalK) {
 
     if(hapusLinkedList(awalP)) {
         return plainteks;
+    } else {
+        return "Proses Enkripsi Data Gagal\n";
     }
 }
 
